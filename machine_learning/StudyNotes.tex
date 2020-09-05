@@ -1,0 +1,42 @@
+\documentclass[10pt]{article}
+\usepackage{amsmath}
+\usepackage{array,enumitem,layouts,calc}
+\usepackage[left=2.2cm,right=2.2cm,top=2.0cm,bottom=2.0cm]{geometry}
+\setlist{nosep,leftmargin=2em,rightmargin=0em}
+%\usepackage{mathptmx}
+\usepackage[T1]{fontenc}
+%\renewcommand*\familydefault{\sfdefault} %% Only if the base font of the document is to be sans serif
+\newcommand\leftColumn{0.75\textwidth-2\tabcolsep}
+\newcommand\rightColumn{0.25\textwidth-2\tabcolsep}
+\newcommand\singleColumn{\textwidth-2\tabcolsep}
+\newcommand{\ket}[1]{ $\left| #1 \right>$ }
+\setlength{\tabcolsep}{0pt}
+
+\begin{document}
+\noindent{\large \textbf{30-Aug-2020}: Welcome Video, and What is Machine Learning}
+\begin{itemize}
+  \item Machine learning: algorithms; supervised, unsupervised, reinforcement, recommender. In this course, also will learn best practices.
+\end{itemize}
+\hfill \\
+{\large \textbf{31-Aug-2020}: Supervised Learning, and Unsupervised Learning}
+\begin{itemize}
+  \item Supervised learning: right answers are given
+  \item Regression: predicts continuous variable output; Classification: predicts discrete values
+  \item Classification can have $1,\dots,N,\dots,\infty$ attributes. E.g. benignness/malignancy based on age, or age and tumor size, etc.
+  \item Unsupervised learning a.k.a. clustering: Right answers aren't given. For example, news that links to different sources for the same topic.
+  \item Cocktail party algorithm: separates two voices in a conversation, with two microphone recordings. Singular value decomposition is key to this algorithm.
+  \item When learning machine learning, use Octave
+\end{itemize}
+\hfill \\
+{\large \textbf{1-Sep-2020}: Model Representation, and Cost Function}
+\begin{itemize}
+  \item Training set notation: $m$ is number of training examples, $x$ are input examples, and $y$ are the output variables. Together, $(x,y)$ form a training example. Also denoted $(x^{(i)},y^{(i)})$.
+  \item In a linear regression, $h_{\theta}(x) = \theta_0 + \theta_1 x \equiv h(x)$.
+  \item Cost function is 
+    \begin{equation*}
+      J(\theta_0, \theta_1) = \frac{1}{2m} \sum_{i=1}^m \left( h_{\theta}(x^{(i)}) - y^{(i)} \right)^2
+    \end{equation*}
+\end{itemize}
+\end{document}
+  
+
