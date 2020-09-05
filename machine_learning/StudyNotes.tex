@@ -36,7 +36,37 @@
     \begin{equation*}
       J(\theta_0, \theta_1) = \frac{1}{2m} \sum_{i=1}^m \left( h_{\theta}(x^{(i)}) - y^{(i)} \right)^2
     \end{equation*}
+  \item Want to minimize $J$ w.r.t. $\theta_0$ and $\theta_1$.
+\end{itemize}
+{\large \textbf{4-Sep-2020}: Cost Function, Intuition I\&II; Gradient Descent}
+\begin{itemize}
+  \item Intuition I; Let $\theta_0=0$, then $\min_{\theta_1}J(\theta_1)$ is what we want
+  \item Ex: $h_{\theta}(x)=\theta_1x$ and let $(x,y) = \{ (1,1), (2,2), (3,3) \}$.
+    \begin{align*}
+      J(\theta_1) &= \frac{1}{2m} \sum_{i=1}^m \left( h_{\theta}(x^{(i)}) - y^{(i)} \right)^2 \\
+      &\rightarrow \text{ If $\theta_1=0$, $h_{\theta}(x) \equiv 0$} \\
+      J(0) &= \frac{1}{2 \times 3} \left( 1 + 4+9\right) \\ 
+      &= \frac{14}{6}
+    \end{align*}
+  \item $J(\theta_1)$ is parabolic
+  \item We want $\min_{\theta}J(\theta)$; here, $\theta_1=1$ satisfies this criterion
+  \item Intuition II; Let $\theta_0, \theta_1$ be free in $J(\theta_0, \theta_1)$ and $h_{\theta}(x)$.
+  \item $J(\theta_0, theta_1)$ is a parabloid
+  \item Gradient Descent; Use gradient descent to find $(\theta_0, \theta_1)$ that minimizes $J(\theta_0, \theta_1)$.
+  \item Differing starting guesses can give different local minima.
+  \item Gradient descent algorithm:
+    \begin{equation*}
+      \theta_j := \theta_j - \alpha \frac{\partial}{\partial \theta_j} J(\theta_0, \theta_1) \quad \text{for $j=1,2$}
+    \end{equation*}
+  \item Simultaneously update $\theta_0, \theta_1$, $\alpha$ is called the learning rate.
+  \item Ex: $\theta_0=1, \theta_2=2$ and $\theta_j := \theta_j + \sqrt{\theta_0 \theta_1}$.
+    \begin{align*}
+      \theta_0 &:= \theta_0 + \sqrt{\theta_0 \theta_1} \\
+      &= 1 + \sqrt{1 \times 2} \\
+      &= 1 + \sqrt{2} \\
+      \theta_1 &= \theta_2 + \sqrt{ \theta_0 \theta_1 } \\
+      &= 2 + \sqrt{1 \times 2} \quad \text{note here that we used the old value of $\theta_0$} \\
+      &= 2 + \sqrt{2}
+    \end{align*}
 \end{itemize}
 \end{document}
-  
-
