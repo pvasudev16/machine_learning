@@ -51,7 +51,7 @@
   \item $J(\theta_1)$ is parabolic
   \item We want $\min_{\theta}J(\theta)$; here, $\theta_1=1$ satisfies this criterion
   \item Intuition II; Let $\theta_0, \theta_1$ be free in $J(\theta_0, \theta_1)$ and $h_{\theta}(x)$.
-  \item $J(\theta_0, theta_1)$ is a parabloid
+  \item $J(\theta_0, \theta_1)$ is a parabloid
   \item Gradient Descent; Use gradient descent to find $(\theta_0, \theta_1)$ that minimizes $J(\theta_0, \theta_1)$.
   \item Differing starting guesses can give different local minima.
   \item Gradient descent algorithm:
@@ -68,5 +68,25 @@
       &= 2 + \sqrt{1 \times 2} \quad \text{note here that we used the old value of $\theta_0$} \\
       &= 2 + \sqrt{2}
     \end{align*}
+\end{itemize}
+{\large \textbf{5-Sep-2020}: Gradient Descent Intuition, Gradient Descent for Linear Regression}
+\begin{itemize}
+  \item Gradient Descent Intuition: For simplicity, assume $\theta_0=0$
+  \item One variable: $\theta_1 := \theta_1 - \alpha \frac{d}{d \theta_1}J(\theta_1)$; Newton-Raphson
+  \item If $\alpha$ is too small, convergence may be very slow. If too large, it may miss the minimum.
+  \item If $\theta_1$ is already at a local minimum, g.d. leaves $\theta_1$ unchanged since the derivative is zero.
+  \item Gradient Descent for Linear Regression: We need derivatives
+    \begin{align*}
+      \frac{ \partial }{\partial \theta_0} J(\theta_0, \theta_1) &= \frac{1}{m} \sum_{i=1}^m \left( \theta_0 + \theta_1 x^{(i)} - y^{(i)}\right) \\
+      \frac{ \partial }{\partial \theta_1} J(\theta_0, \theta_1) &= \frac{1}{m} \sum_{i=1}^m \left( \theta_0 + \theta_1 x^{(i)} - y^{(i)}\right) \times x^{(i)}
+    \end{align*}
+  \item So, gradient descent finds the new $\theta$ variables as
+    \begin{align*}
+      \theta_0 &:= \theta_0 - \alpha \frac{1}{m} \sum_{i=1}^m \left( \theta_0 + \theta_1x^{(i)} - y^{(i)} \right)\\
+      \theta_1 &:= \theta_1 - \alpha \frac{1}{m} \sum_{i=1}^m \left( \theta_0 + \theta_1x^{(i)} - y^{(i)} \right) \times x^{(i)}
+    \end{align*}
+  \item This is called ``batch gradient descent''; batch implies looking at all the training examples. This is represented by the $\sum_{i=1}^m$.
+  \item Quiz Linear Regression with One Variable: 2) $m= \Delta y/ \Delta x = (1-0.5)/(2-1) = 0.5 \implies y=0.5x + b$; y-intercept is clearly zero since (0,0) is a data point.
+  \item 3) $h_{\theta}(x)$; $\theta_0=-1$, $\theta_1=2$; $h_{\theta}(6) = -1 + 2 \times 6 = 11$
 \end{itemize}
 \end{document}
