@@ -89,4 +89,71 @@
   \item Quiz Linear Regression with One Variable: 2) $m= \Delta y/ \Delta x = (1-0.5)/(2-1) = 0.5 \implies y=0.5x + b$; y-intercept is clearly zero since (0,0) is a data point.
   \item 3) $h_{\theta}(x)$; $\theta_0=-1$, $\theta_1=2$; $h_{\theta}(6) = -1 + 2 \times 6 = 11$
 \end{itemize}
+\hfill \\
+{\large \textbf{9-Sep-2020}: Linear Algebra Review}
+\begin{itemize}
+  \item Matrices and Vectors: Nothing new; in this course, index from 1.
+  \item Addition and Scalar Multiplication: Nothing new
+  \item Matrix Vector Multiplication: Nothing new;
+  \item Ex: Let house sizes be $\{2104, 1416, 1534, 852.\}$. Let the hypothesis be $h_{\theta}(x) = -40 + 0.25x$.
+    \begin{equation*}
+      \begin{bmatrix}
+        1 & 2104 \\
+        1 & 1416 \\
+        1 & 1534 \\
+        2 & 852 
+      \end{bmatrix}
+      \begin{bmatrix}
+        -40 \\ 
+        0.25
+      \end{bmatrix} 
+      =
+      \begin{bmatrix}
+        -40 \times 1 + 0.25 \times 2104 \\
+        -40 \times 1 + 0.25 \times 1416 \\
+        -40 \times 1 + 0.25 \times 1534 \\
+        -40 \times 1 + 0.25 \times 852
+      \end{bmatrix}
+      =
+      \begin{bmatrix}
+        h_{\theta}(2104)\\
+        h_{\theta}(1416)\\
+        h_{\theta}(1534)\\
+        h_{\theta}(852)
+      \end{bmatrix}
+    \end{equation*}
+    This essentially says data matrix $\times$ parameters = prediction
+  \item Best to do this with built-in linear algebra function in Octave/Python. You can do it manually in a for-loop, but it'll be really slow.
+  \item Matrix Multiplication: Take the same example. Now we have three hypotheses:
+    \begin{align*}
+      h_{\theta}(x) &= -40 + 0.25x \\
+      h_{\theta}(x) &= 200 + 0.1x \\
+      h_{\theta}(x) &= -150 + 0.4x 
+    \end{align*}
+    In matrix form, this becomes
+    \begin{equation*}
+      \begin{bmatrix}
+        1 & 2104 \\
+        1 & 1416 \\
+        1 & 1534 \\
+        2 & 852 
+      \end{bmatrix}
+      \begin{bmatrix}
+        -40 & 200 & -150 \\
+        0.25 & 0.1 & 0.4
+      \end{bmatrix}
+      =
+      \begin{bmatrix}
+        486 & 410 & 692 \\
+        314 & 342 & 416 \\
+        344 & 353 & 464 \\
+        173 & 285 & 191
+      \end{bmatrix}
+    \end{equation*}
+  \item Matrix Multiplication Properties: Not commutative. $AB \neq BA$. But it's associative. $ABC = (AB)C = A(BC)$.
+  \item Identity matrix is $I$ such that $AI = IA = A$. $I = \begin{bmatrix}1 & 0 \\ 0 & 1\end{bmatrix}$ in 2D.
+  \item Inverse of $A$ is $A^{-1}$ such that $AA^{-1} = A^{-1}A = I$.
+  \item Transpose of $A$ is $A^{T}$. If $B=A^{T}$, then $B_{ij} = A_{ji}$.
+  \item Quiz: 4) $u = \begin{bmatrix}3 \\ -5 \\ 4\end{bmatrix}, v= \begin{bmatrix}1 \\ 2 \\ 5\end{bmatrix}$, then $u^Tv = \begin{bmatrix}3 & -5 & 4\end{bmatrix}\begin{bmatrix}1 \\ 2\\ 5 \end{bmatrix} = -3 + (-10) + 20 = 13$.
+\end{itemize}
 \end{document}
