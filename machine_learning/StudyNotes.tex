@@ -156,4 +156,14 @@
   \item Transpose of $A$ is $A^{T}$. If $B=A^{T}$, then $B_{ij} = A_{ji}$.
   \item Quiz: 4) $u = \begin{bmatrix}3 \\ -5 \\ 4\end{bmatrix}, v= \begin{bmatrix}1 \\ 2 \\ 5\end{bmatrix}$, then $u^Tv = \begin{bmatrix}3 & -5 & 4\end{bmatrix}\begin{bmatrix}1 \\ 2\\ 5 \end{bmatrix} = -3 + (-10) + 20 = 13$.
 \end{itemize}
+\hfill \\
+{\large \textbf{10-Sep-2020}: Multiple Features}
+\begin{itemize}
+  \item Introduce other features: e.g. house price not just a function of square footage; Now, house price vs. sq. footage, age, number of bedrooms, etc.
+  \item $n$ is the number of features, $x_j^{(i)}$ represents the value of the $j^{th}$ feature for the $i^{th}$ training example; $x^{(i)}$ is a vector of all the features.
+  \item Hypothesis: $h_{\theta}(x) = \theta_0 + \theta_1x_1 + \theta_2 x_2 + \dots + \theta_n x_n$. Let $x_0^{(i)}=1$. Then, we can write this in matrix form as
+    \begin{equation*}
+      x=\begin{bmatrix}x_0 \\ x_1 \\ \vdots \\ x_n\end{bmatrix}, \quad \theta = \begin{bmatrix} \theta_0 \\ \theta_1 \\ \vdots \\ \theta_n \end{bmatrix} \implies h_{\theta}(x) = \theta^T x
+    \end{equation*}
+\end{itemize}
 \end{document}
