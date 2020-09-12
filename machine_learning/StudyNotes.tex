@@ -166,4 +166,58 @@
       x=\begin{bmatrix}x_0 \\ x_1 \\ \vdots \\ x_n\end{bmatrix}, \quad \theta = \begin{bmatrix} \theta_0 \\ \theta_1 \\ \vdots \\ \theta_n \end{bmatrix} \implies h_{\theta}(x) = \theta^T x
     \end{equation*}
 \end{itemize}
+\hfill \\
+{\large \textbf{11-Sep-2020}: G.D. for Multiple Variables, G.D. in Practice I - Feature Scaling, G.D. in Practice II - Learning Rate, Features and Polynomial Regression, Normal Equation}
+\begin{itemize}
+  \item Gradient Descent for Multiple Variables: For $n \geq 1$, gradient descent is
+    \begin{equation*}
+      \theta_j := \theta_j - \alpha \frac{1}{m} \sum_{i=1}^m \left( h_{\theta}(x^{(i)}) - y^{(i)}\right)x_j^{(i)} \quad \text{for $j=0,\dots,n$.}
+    \end{equation*}
+  \item G.D. in Practice I - Feature Scaling: ensure features have
+    similar scales. E.g.: Houses in the data set have 1-5 bedrooms,
+    and are between 0-2000 sq. ft. Scale these features to the order
+    of 1. So, divide bedrooms by 5 so it's 0-1, and divide square
+    footage by 2000, so it's 0-2.
+  \item Feature should be $-1 \leq x_i \leq 1$.
+  \item Mean renormalization; Subtract off the mean, and then scale. E.g. $x_1= (\text{sq. footage} - 1000)/2000$ and $x_2 = (\text{bedrooms} - 2)/5$. More formally,
+    \begin{equation*}
+      x_i \rightarrow \frac{x_i - \mu_i}{s_i} \quad \text{(mean renormalization),}
+    \end{equation*}
+    where $x_i$ is the feature, $\mu_i$ is the mean value of the
+    $i^{th}$ feature, and $s_i$ is the range, or standard deviation,
+    of the $i^{th}$ feature.
+  \item G.D. in Practice II - Learning Rate: We can plot $J(\theta)$ as a function of iterations, $N$; it should be a decreasing function.
+  \item If $J(\theta)$ vs $N$ diverges, you need a smaller learning rate, $\alpha$.
+  \item If $J(\theta)$ vs $N$ falls, rises, falls, rises, etc., then use a smaller $\alpha$.
+  \item Features and Polynomial Regression: In the housing example,
+    hypothesis could be $h_{\theta}(x) = \theta_0 + \theta_1 \times
+    \text{length} + \theta_2 \times \text{depth}$.  Maybe you think
+    the relevant figure is area = length$\times$depth$\equiv x$. The
+    hypothesis is $h_{\theta}(x) = \theta_0 + \theta_1 \times x$.
+  \item Polynomial regression; e.g. 
+    \begin{alignat*}{4}
+      &\theta_0 + \theta_1&&x   + \theta_2&&x^2 + \theta_3&&x^3 \\
+      &\theta_0 + \theta_1&&x_1 + \theta_2&&x_2 + \theta_3&&x_3 \\
+    \end{alignat*}
+    where $x_1=x=\text{area}$, $x_2=x^2 = \text{area}^2$, $x_3=x^3=\text{area}^3$. In polynomial regression, feature scaling becomes very important.
+  \item Don't just have to have integer powers: e.g. $h_{\theta}(x) = \theta_0 + \theta_1x + \theta_2 x^{1/2}$
+  \item Normal Equation: Instead of using gradient descent to find $\min_{\theta}J$, use normal equation to do it analytically.
+  \item Intuition; in 1-D, if $J(\theta)=a\theta^2 + b\theta+c$, you can find $dJ/d\theta=0$ to get the extremum. In $N$-D, set $\partial_{\theta_j}J=0$ for $j=1,\dots,N$.
+  \item Say you have $m$ training examples, each with $n$ features. Let
+    \begin{align*}
+      X_{ij} &= x_j^{(i)} \\
+      Y_i &= y^{(i)} \\
+      \theta &= \left( X^T X \right)^{-1} X^T Y
+    \end{align*}
+  \item If the training examples are $\left( x^{(1)}, y^{(1)} \right), \dots, \left( x^{(m)}, y^{(m)} \right)$, then
+    \begin{equation*}
+      x^{(i)} = \begin{bmatrix}x_0^{(i)} \\ \vdots \\ x_n^{(i)}\end{bmatrix}, 
+      X = \begin{bmatrix} \left.\vec{x}^{(1)}\right.^T \\ \vdots \\ \left.\vec{x}^{(m)}\right.^T \end{bmatrix},
+      Y = \begin{bmatrix} y^{(1)} \\ \vdots \\ y^{(m)} \end{bmatrix},
+      \theta = \left( X^T X\right)^{-1} X^T Y,
+    \end{equation*}
+    where $x_0^{(i)}=1$.
+  \item With normal equation method, features don't have to be scaled.
+  \item Normal equation method is slow if $n$ is very large; Computing $(X^TX)^{-1}$ is costly. Inverting an $N \times N$ matrix costs $O(N^3)$.
+\end{itemize}
 \end{document}
