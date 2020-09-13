@@ -220,4 +220,12 @@
   \item With normal equation method, features don't have to be scaled.
   \item Normal equation method is slow if $n$ is very large; Computing $(X^TX)^{-1}$ is costly. Inverting an $N \times N$ matrix costs $O(N^3)$.
 \end{itemize}
+\hfill \\
+{\large \textbf{12-Sep-2020}: Normal Equation and Non-Invertibility}
+\begin{itemize}
+  \item What if $X^TX$ is signular? Octave's \texttt{pinv} (pseudo-inverse) takes care of that
+  \item Causes; redundancy: e.g. area in ft$^2$ and in m$^2$; too few equations: $m<n$, fewer training examples compared to features, i.e. too few equations, too many unknowns.
+  \item Quiz: 1) Midterm exam average $\mu_1 = (89+72+94-69)/4=81$; range is $s_1= 94-69=25$, thus $x_1^{(3)} \rightarrow (x^{(3)}-\mu_1)/s_1 = (94-81)/25=0.52$
+  \item 3) $X = \begin{bmatrix}x_0^{(1)} & \dots & x_3^{(1)} \\ \hfill & \vdots & \hfill \\ x_0^{(14)} & \dots & x_3^{(14)} \end{bmatrix}$ is 14$\times$4.
+\end{itemize}
 \end{document}
