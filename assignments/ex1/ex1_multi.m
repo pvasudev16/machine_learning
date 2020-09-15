@@ -84,10 +84,33 @@ fprintf('Running gradient descent ...\n');
 % Choose some alpha value
 alpha = 0.01;
 num_iters = 400;
+%alphaTest = [0.01 0.03 0.1 0.3 10 30]; % Play with learning rate PV
+%jTest=zeros(num_iters,size(alphaTest,2)); % PV
 
 % Init Theta and Run Gradient Descent 
 theta = zeros(3, 1);
 [theta, J_history] = gradientDescentMulti(X, y, theta, alpha, num_iters);
+
+%Get different cost history functions PV
+%for i=1:size(alphaTest,2)
+%  [thetaTest, jTest(:,i)]=gradientDescentMulti(X, y, theta, alphaTest(i), num_iters);
+%endfor
+
+%figure;
+%hold on;
+%plot(1:numel(jTest(:,1)), jTest(:,1), '-b', 'LineWidth', 2);
+%plot(1:numel(jTest(:,2)), jTest(:,2), '-r', 'LineWidth', 2);
+%plot(1:numel(jTest(:,3)), jTest(:,3), '-g', 'LineWidth', 2);
+%plot(1:numel(jTest(:,4)), jTest(:,4), '-k', 'LineWidth', 2);
+%plot(1:numel(jTest(:,5)), jTest(:,5), '--b', 'LineWidth', 2);
+%plot(1:numel(jTest(:,6)), jTest(:,6), '--g', 'LineWidth', 2);
+%axis([1, numel(jTest(:,1)), 2e9, 2.5e9])
+%xlabel('Number of iterations');
+%ylabel('Cost J');
+%hold off;
+
+%fprintf('Program paused. Press enter to continue.\n');
+%pause;
 
 % Plot the convergence graph
 figure;
@@ -104,7 +127,10 @@ fprintf('\n');
 % ====================== YOUR CODE HERE ======================
 % Recall that the first column of X is all-ones. Thus, it does
 % not need to be normalized.
-price = 0; % You should change this
+sqFt = (1650-mu(1))/sigma(1);
+bdRm = (3-mu(2))/sigma(2);
+x = [1 sqFt bdRm]; 
+price = x*theta; % You should change this
 
 
 % ============================================================
@@ -149,7 +175,8 @@ fprintf('\n');
 
 % Estimate the price of a 1650 sq-ft, 3 br house
 % ====================== YOUR CODE HERE ======================
-price = 0; % You should change this
+w = [1 1650 3];
+price = w*theta; % You should change this
 
 
 % ============================================================
