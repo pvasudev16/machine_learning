@@ -228,10 +228,65 @@
   \item Quiz: 1) Midterm exam average $\mu_1 = (89+72+94-69)/4=81$; range is $s_1= 94-69=25$, thus $x_1^{(3)} \rightarrow (x^{(3)}-\mu_1)/s_1 = (94-81)/25=0.52$
   \item 3) $X = \begin{bmatrix}x_0^{(1)} & \dots & x_3^{(1)} \\ \hfill & \vdots & \hfill \\ x_0^{(14)} & \dots & x_3^{(14)} \end{bmatrix}$ is 14$\times$4.
 \end{itemize}
-\hfill \\
+\hfill \\ \hfill \\
 {\large \textbf{13-Sep-2020}: Octave Quiz}
 \begin{itemize}
   \item Quiz: 1) A is 3$\times$2, B is 2$\times$3. Thus, AB and A+B$^T$ are valid
   \item 4) $u,v$ are $7\times1$. Calculate $u \cdot v$. This can be done via $u^Tv$. In Octave, this is \texttt{sum(v.*w)} and \texttt{v'*w}
+\end{itemize}
+\hfill \\
+{\large \textbf{17-Sep-2020}: Classification, Hypothesis Representation, Decision Boundary, Cost Function, Simplified Cost Function and Gradient Descent}
+\begin{itemize}
+  \item Classification: $y \in \{ 0,1 \}$ (binary), $y \in \{ 0,1,2, \dots, N \}$ (multiclass)
+  \item Could fit a linear $h_{\theta}(x) = \theta^Tx$ and classify
+    using a threshold of 0.5. Not good, though. Too sensitive to
+    outliers. Also, $h_{\theta}(x)$ can be negative.
+  \item Hypothesis Representation:
+    \begin{align*}
+      h_{\theta}(x) &= g(\theta^Tx); \\
+      g(z) &= \frac{1}{1+e^{-z}} \quad \text{sigmoid or logistic function; Fermi-Dirac distribution;}\\
+      &\quad \implies h_{\theta}(x) = \frac{1}{1 + \exp\left( -\theta^T x\right)}.
+    \end{align*}
+  \item $h_{\theta}(x)$ represents the probability that $y=1$ on an
+    input x. E.g. $\begin{bmatrix}x_0 \\ x_1 \end{bmatrix}
+    = \begin{bmatrix}1 \\ \text{tumor size} \end{bmatrix}$. If
+    $g(x)=70\%$, then there is a 70\% chance that the tumor is
+    malignant.
+  \item $h_{\theta}(x) = P \left( \left. y=1 \right| x; \theta \right)$ means ``the probability that $y=1$ given x, parametrized by $\theta$''
+  \item Probabilities sum to 1. $P \left( \left. y=1 \right| x; \theta \right) + P \left( \left. y=0 \right| x; \theta \right) = 1$.
+  \item Decision Boundary: Can say if $h_{\theta}(x) \geq 0.5 \implies y=1$, $h_{\theta}(x) < 0.5 \implies y=0$.
+  \item $g(z) \geq 0.5 \implies z \geq 0$. So, $h_{\theta}(x)=g(\theta^Tx) \geq 0.5 \implies \theta^Tx \geq 0.$ Converse is true for $<0.5$.
+  \item Decision Boundary; Say $g(\theta_0 + \theta_1x_1 +
+    \theta_2x_2)$. WLOG, let $\theta_1=\theta_2=1$. On an $x_2$-$x_1$
+    diagram, this parametrizes a straight line. $x_2 = -x_1 +
+    \theta_0$. The decision boundary is the set of points $(x_2,x_1)$
+    s.t. $h_{\theta}(x)=0.5$.
+  \item Example; $\theta_0=5, \theta_1=-1, \theta_2=0 \implies h_{\theta}(x) = g(5-x_1)$. Decision boundary is implied by $x_1=5$. Where is $h \geq 0.5$? $5-x \geq 0 \implies x_1 \leq 5$. This region corresponds to $y=1$.
+  \item Non-Linear Decision Boundaries; $g(\theta_0 + \theta_1x_2 + \theta_2x_2 + \theta_3x_1^2 + \theta_4x_2^2)$.
+  \item Cost Function: Training set $\{ (x^{(1)}, y^{(1)}), \dots, (x^{(m)},y^{(m)})\}$, $x^{(i)} = \begin{bmatrix}x_0^{(i)} \\ \vdots \\ x^{(i)}_n\end{bmatrix}$. $m$ training examples, each with $n$ features. $x_0^{(i)} \equiv 1$.
+  \item Recall, for linear regression, $J(\theta) = \frac{1}{m} \sum_{i=1}^m \frac{1}{2} \left( h_{\theta}(x^{(i)}) - y^{(i)} \right)^2$. Define
+    \begin{equation*}
+      \text{cost}(h_{\theta}(x),y) = \frac{1}{2} \left( h_{\theta}(x) - y\right)^2, \quad \text{for linear regression only}
+    \end{equation*}
+    so $J(\theta) = \frac{1}{m}\sum_{i=1}^m \text{cost}(h_{\theta}(x^{(i)}, y^{(i)})$.
+  \item For log. regression, $J(\theta)$ is not convex, i.e. it has many local minima. Need a new cost function.
+  \item For log. regression, $\text{cost}(h_{\theta}(x),y) = \begin{cases} -\log(h_{\theta}(x)) & \mbox{if } y=1 \\ -\log(1-h_{\theta}(x)) & \mbox{if } y=0 \end{cases}$
+  \item If $y=1$, and $h_{\theta}(x)=1$, the cost=0. As $h_{\theta}(x)
+    \rightarrow 0$, $\text{cost} \rightarrow \infty$. Converse is also
+    true for $y=0$.
+  \item Simplified Cost Function For Gradient Descent: Write out cost function in one equation
+    \begin{equation*}
+      \text{cost}(h_{\theta}(x),y) = -y \log(h_{\theta}(x)) - (1-y) \log (1 - h_{\theta}(x))
+    \end{equation*}
+    Plug into $J$.
+    \begin{equation*}
+      J(\theta) = \frac{1}{m} \sum_{i=1}^m \left( -y^{(i)} \log\left(h_{\theta}(x^{(i)})\right) - (1-y^{(i)}) \log \left(1- h_{\theta}(x) \right) \right)
+    \end{equation*}
+    Comes from ``max likelihood estimation.'' Then find $\theta$ via $\min_{\theta}J(\theta)$. USe $\theta$ to make predictions $h_{\theta}(x) = 1/(1 + \exp(\theta^Tx))$.
+  \item Use g.d.: $\theta_j := \theta_j - \alpha \partial_{\theta_j} J(\theta)$. Computing the derivatives, we have
+    \begin{equation*}
+      \theta_j := \theta_j - \alpha \sum_{i=1}^m \left( h_{\theta}(x^{(i)}) - y^{(i)}\right)x_j^{(i)},
+    \end{equation*}
+    which is the same as for linear regression, though $h$ has a different meaning.
 \end{itemize}
 \end{document}
