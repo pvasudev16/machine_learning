@@ -289,4 +289,42 @@
     \end{equation*}
     which is the same as for linear regression, though $h$ has a different meaning.
 \end{itemize}
+\hfill \\
+{\large \textbf{2-Oct-2020} Advanced Optimization, Multiclass Classification One-Vs.-All, Problem of Overfitting, Cost Function (Regularization), Reg. Lin. Regr., Reg. Log. Regr.}
+\begin{itemize}
+  \item Advanced Optimization; nothing new
+  \item Multiclass Classification: One-vs.-all; e.g. weather: sunny, rainy, snowy, etc. $h_{\theta}^{(i)}(x) = P \left( \left. y=i \right| x; \theta \right)$ represents the boundary separating class $i$ from the rest.
+  \item Quiz; $h_{\theta}(x) = g(\theta_0 + \theta_1x + \theta_2x)$. Let $\theta_0=6$, $\theta_1=-1$, $\theta_2=0$. The argument, $z$, of $g$ is positive.  $z=0 \implies x=6$, and $z \geq 0 \implies x \leq 6$. So, for $y=1$, $x \leq 6$.
+  \item Problem of Overfitting; Underfit means high bias, overfit means high variance. Overfitting fails to generalize to new examples. To fix overfitting you can (i) reduce the number of examples, (ii) regularize to reduce the magnitude of the $\theta_i$.
+  \item Cost Function (Regularization); Add terms to the cost function such as $1000\theta_3^2$. This will force $\theta_3$ down.
+  \item But what if we don't know what features we want to be small? Do
+    \begin{equation*}
+      J(\theta) = \frac{1}{2m} \left[ \sum_{i=1}^m \left( h_{\theta}(x^{(i)}) - y^{(i)}\right)^2  + \underbrace{\lambda \sum_{i=1}^m \theta_j^2}_{\text{Regularization term}} \right],
+    \end{equation*}
+    where we do not penalize $\theta_0$. If $\lambda$ is too large, it underfits.
+  \item Regularized Linear Regression; G.D. for lin. regr.:
+    \begin{align*}
+      \theta_j &:= \theta_j - \alpha \left[ \frac{1}{m} \sum_{i=1}^m \left( h_{\theta}(x^{(i)}) - y^{(i)} \right)x^{(i)} + \frac{\lambda}{m}\theta_j \right] \\
+      &:= \theta_j \left( 1 - \alpha \frac{\lambda}{m} \right) - \alpha \frac{1}{m} \sum_{i=1}^m \left( h_{\theta}(x^{(i)}) - y^{(i)} \right)x^{(i)},
+    \end{align*}
+    where $1 - \alpha \lambda/m < 1$ which reduces $\theta_j$.
+  \item Normal equation becomes 
+    \begin{equation*}
+      \theta = \left(x^Tx + \lambda \begin{bmatrix} 0 & & & \\ & 1 & & \\ & & \ddots & \\ & & & 1 \end{bmatrix}\right)^{-1}x^Ty,
+    \end{equation*}
+    and as long as $\lambda>0$, the matrix will not be singular.
+  \item Regularized Log. Regression; Cost function is
+    \begin{equation*}
+      J(\theta) = - \frac{1}{m} \sum_{i=1}^m \left[y^{(i)} \log h_{\theta}(x^{(i)}) + (1 -y^{(i)})\log \left( 1 - h_{\theta}(x^{(i)}) \right)\right] + \frac{\lambda}{2m} \sum_{i=1}^m \theta_j^2
+    \end{equation*}
+  \item G.D. becomes (same cosmetically as for lin. regr.)
+    \begin{equation*}
+      \theta_j \left( 1 - \alpha \frac{\lambda}{m} \right) - \alpha \frac{1}{m} \sum_{i=1}^m \left( h_{\theta}(x^{(i)}) - y^{(i)} \right)x^{(i)}.
+    \end{equation*}
+  \item Use \texttt{fminunc} (unc means unconstrained). For this, you need to give derivatives.
+    \begin{align*}
+      \frac{ \partial }{\partial \theta_0} J(\theta) &= \frac{1}{m} \sum_{i=1}^m \left( h_{\theta}(x^{(i)}) - y^{(i)} \right)x_0^{(i)} \\
+      \frac{ \partial }{\partial \theta_j} J(\theta) &= \frac{1}{m} \sum_{i=1}^m \left( h_{\theta}(x^{(i)}) - y^{(i)} \right)x_j^{(i)} + \frac{\lambda}{m} \theta_j
+    \end{align*}
+\end{itemize}
 \end{document}
