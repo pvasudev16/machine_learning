@@ -333,4 +333,28 @@
   \item e.g. identifying a car. Come up with a classification problem. Take images of a car and select two pixels. Take their intensity, and form an ordered pair $(I(p_1),I(p_2))$. Do this for cars and non-cars. Cars and non-cars will lie in different regions.
   \item If images were 50x50 pixels, $n=2500$. (2500 pixels per image). This would make $3\times10^6$ quadratic features. So, log regression with quadratic features doesn't work.
 \end{itemize}
+\hfill \\
+{\large \textbf{7-Oct-2020} Model Representation I and II, Examples and Intutitions I and II}
+\begin{itemize}
+  \item Model Representation I; A neuron is a logistic unit. Input is $\{x_1,\dots,x_n\} \rightarrow h_{\theta}(x) = g(\theta^Tx)$ where $g(z) = (1+\exp(-z))^{-1}$. Sigmoid activation function.
+  \item We call $x_0$ the bias unit, and in neural networks, $\theta$ are called the weights. We call the inputs the ``input layer'', the last layer of neurons the ``output layer,'' and the rest ``hidden layers.''
+  \item $a_i^{(j)}$ is the activation of unit $i$ in the layer $j$. $\Theta^{(j)}$ is the matrix of weights controlling the function mapping from layer $j$ to layer $j+1$.
+  \item cf. p. 20 of lecture 08.pdf for a detailed picture.
+  \item If a network has $s_j$ units in layer $j$ and $s_{j+1}$ units in layer $j+1$, then $\Theta^{(j)}$ is of dimension $s_{j+1} \times (s_j + 1)$.
+  \item Model Representation II; Define $z_1^{(2)} = \Theta^{(1)}_{10}x_0 + \Theta^{(1)}_{11}x_1 + \Theta^{(1)}_{12}x_2 + \Theta^{(1)}_{13}x_3$ such that $a_1^{(s)} = g(z_1^{(2)})$ \hfill \\
+    Then let $z^{(2)} = \begin{bmatrix}z_1^{(2)} \\ z_2^{(2)} \\ z_3^{(2)} \end{bmatrix}$, $x = \begin{bmatrix} x_0 \\ x_1 \\ x_2 \\ x_3 \end{bmatrix}$. Then, $z^{(2)} = \Theta^{(1)}x$ and $a^{(2)} = g(z^{(2)})$. (These last two are vectors, and $g$ is applied element-wise. Here $\Theta^{(1)}$ is $3 \times 4$)
+  \item cf. p. 23 of lecture 08.pdf. We may also call the input layer $a^{(1)}$. To add a bias for $a^{(3)}$, define $a_0^{(2)}=1$. Thus $a^{(2)} \in \mathcal{R}^4$. 
+  \item This is forward propagation. In the example, on p. 23, imagine hiding the input layer. Then we have $a_1^{(2)}$, $a_2^{(2)}$, $a_3^{(2)}$ feeding to $a^{(3)}$.
+    \begin{align*}
+      a^{(3)} &= g( \Theta^{(2)}_{10}x_0 + \Theta^{(2)}_{11}x_1 + \Theta^{(2)}_{12}x_2 + \Theta^{(2)}_{13}x_3 \\
+      &= g( \theta_0x_0 + \theta_1x_1 + \theta_2x_2 + \theta_3x_3) \quad \text{drop some super/subscripts}\\
+      &= g( \theta^T x) \rightarrow \text{ just like log. regression.}
+    \end{align*}
+    The difference comes in that it's not the straight inputs passed to the log regression. It's the ``learned'' features of the first layer.
+  \item An architecture refers to how the networks are connected.
+  \item Examples and Intutions I; $x_1$ NOR $x_2$ = NOT($x_1$ XOR $x_2$). XOR is True if $x_1$ OR $x_2$ is True.
+  \item cf. p. 34 of lecture 08.pdf for a n.n. implementation of AND, OR, and (NOT $x_1$) AND (NOT $x_2$)
+  \item For a NOT, use a large negative weight on the neurons other than the bias.
+  \item cf. p. 40-42 re: multiclass classification.
+\end{itemize}
 \end{document}
