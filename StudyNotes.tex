@@ -357,4 +357,48 @@
   \item For a NOT, use a large negative weight on the neurons other than the bias.
   \item cf. p. 40-42 re: multiclass classification.
 \end{itemize}
+\hfill \\
+{\large \textbf{8-Oct-2020} Cost Function and Back Propagation, Backpropagation Algorithm}
+\begin{itemize}
+  \item Cost Function and Back Propagation; $L$ = \# of layers, $s_l$ is \# of units in layer $l$, excluding bias.
+  \item Binary classification: $s_L=1$, $h_{\theta}(x) \in \mathcal{R}$, $K=1$ (i.e. a real number). $y = \{ 0,1 \}$.\\
+    Multiclass classification: $s_L=K$, $h_{\theta}(x) \in \mathcal{R}^K$, $K \geq 3$, $y \in \mathcal{R}^K$ e.g. $\begin{bmatrix}1 \\ 0 \\ 0 \\ 0\end{bmatrix}, \begin{bmatrix}0 \\ 1 \\ 0 \\ 0 \end{bmatrix}$, etc.
+  \item For a n.n., $h_{\theta}(x) \in \mathcal{R}^K$, $\left[ h_{\theta}(x)\right]_i = i^{th}$ output. The cost function is
+    \begin{align*}
+      J( \Theta ) &= -\frac{1}{m} \left[ \sum_{i=1}^m \sum_{k=1}^K y_k^{(i)} \log \left( h_{\Theta}(x^{(i)})\right)_k + (1-y_k^{(i)}) \log \left( 1 - \left( h_{\Theta}(x^{(i)}) \right)_k \right) \right] \\
+      &+ \frac{\lambda}{2m} \sum_{l=1}^{L-1} \sum_{i=1}^{s_l} \sum_{j=1}^{s_l+1} \left( \Theta_{ji}^{(l)} \right)^2.
+    \end{align*}
+  \item Backpropagation Algorithm; Wish to get $\min_{\Theta}J(\Theta)$. Need $J(\Theta)$ and $\frac{\partial}{\partial \Theta_{ij}^{(l)}} J(\Theta)$ for all $i,j,l$.
+  \item Suppose we have just one training example $(x,y)$. See p.6 of lecture 09.pdf for forward propagation.
+  \item $\delta^{l}_j$ represents the error of the $j^{th}$ unit in the $l^{th}$ layer. \\
+    For the output layer, (cf. p. 7), $\delta_j^{(4)} = a_j^{(4)} - y_j = \left[ h_{\theta}(x)\right]_j - y_j$. Vectorize this to have $\delta^{(4)} = a^{(4)} - y$. 
+  \item Look at $\delta^{(3)}$.
+    \begin{equation*}
+      \delta^{(3)} = \left( \Theta^{(3)} \right)^T \delta^{(4)} \underbrace{.*}_{\text{element-wise}} g^{\prime} \left( z^{(3)} \right), 
+    \end{equation*}
+    where $g^{\prime}$ is the derivative of the activation function. It can be shown that $g^{\prime}(z^{(3)}) = a^{(3)}.*\left(1-a^{(3)}\right)$. There is no $\delta^{(1)}$ since we assume there is no error to the input.
+  \item We call this backpropagation since we start at the output layer and get $\delta^{(4)}$, and use it to get $\delta^{(3)}$, etc.
+  \item Without regularization, we have 
+    \begin{equation*}
+      \frac{ \partial }{\partial \Theta_{ij}^{(l)}} J (\Theta) = a_j^{(l)} \delta_i^{(l+1)}
+    \end{equation*}
+  \item Now say the training set is $\{ (x^{(1)}, y^{(1)}), \dots, (x^{(m)}, y^{(,)})\}$. Let $\Delta_{ij}^{(l)}=0$ for all $i,j,l$. Pseudocode:
+  \item For $i$=1 to $m$:
+    \begin{itemize}
+      \item  $a^{(1)} = x^{(i)}$
+      \item Do forwards prop to get $a^{(l)}$ for $l=2,\dots,L$
+      \item Use $y^{(i)}$ to get $\delta^{(L)} = a^{(L)} - y^{(i)}$
+      \item Use back propagation to get $\delta^{(L-1)},\dots,\delta^{(2)}$
+      \item $Delta_{ij}^{(l)} := \Delta_{ij}^{(l)} + a_j^{(l)}\delta_i^{(l+1)} \rightarrow$ vectorize: $\Delta^{(l)} := \Delta^{(l)} + \delta^{(l+1)}(a^{(l)})^T$
+    \end{itemize}
+    Then, calculate
+    \begin{itemize}
+      \item $D_{ij}^{(l)} := \frac{1}{m} \Delta_{ij}^{(l)} + \lambda \Theta_{ij}^{(l)}$ if $j \neq 0$
+      \item $D_{ij}^{(l)} := \frac{1}{m} \Delta_{ij}^{(l)}$ if $j =0$
+    \end{itemize}
+    \begin{equation*}
+      \implies \frac{\partial}{\partial \Theta_{ij}^{(l)}} J( \Theta ) = D_{ij}^{(l)}
+    \end{equation*}
+      
+\end{itemize}
 \end{document}
