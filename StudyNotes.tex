@@ -389,7 +389,7 @@
       \item Do forwards prop to get $a^{(l)}$ for $l=2,\dots,L$
       \item Use $y^{(i)}$ to get $\delta^{(L)} = a^{(L)} - y^{(i)}$
       \item Use back propagation to get $\delta^{(L-1)},\dots,\delta^{(2)}$
-      \item $Delta_{ij}^{(l)} := \Delta_{ij}^{(l)} + a_j^{(l)}\delta_i^{(l+1)} \rightarrow$ vectorize: $\Delta^{(l)} := \Delta^{(l)} + \delta^{(l+1)}(a^{(l)})^T$
+      \item $\Delta_{ij}^{(l)} := \Delta_{ij}^{(l)} + a_j^{(l)}\delta_i^{(l+1)} \rightarrow$ vectorize: $\Delta^{(l)} := \Delta^{(l)} + \delta^{(l+1)}(a^{(l)})^T$
     \end{itemize}
     Then, calculate
     \begin{itemize}
@@ -399,6 +399,25 @@
     \begin{equation*}
       \implies \frac{\partial}{\partial \Theta_{ij}^{(l)}} J( \Theta ) = D_{ij}^{(l)}
     \end{equation*}
-      
 \end{itemize}
+\hfill \\
+{\large \textbf{8-Oct-2020}: Backpropagation Intutition, Implementation Note, Gradient Checking}
+\begin{itemize}
+  \item Backpropagation Intuition; Quiz: Suppose $\Theta_{11}^{(2)} =
+    \Theta_{21}^{(2)} = 0$. After back propagation, what can you say
+    about $\delta_1^{(3)}$? We know that $\delta_1^{(3)} =
+    \Theta_{11}^{(3)} \delta_1^{(4)}$. So, there is insufficient
+    information to tell.
+  \item Implementation Note; Unrolling Parameters. In Octave, say \texttt{v} is a matrix. Then \texttt{v(:)} makes it a vector.
+  \item Gradient Checking; Use symmetric difference. In 1-D
+    \begin{equation*}
+      \frac{d}{d \theta} J(\theta) = \frac{ J(\theta + \epsilon) - J(\theta - \epsilon) }{2\epsilon}.
+    \end{equation*}
+  In N-D,
+    \begin{equation*}
+      \frac{\partial}{\partial \theta_j} J(\theta) = \frac{J( \theta_1, \dots, \theta_j + \epsilon, \dots, \theta_n) - J( \theta_1, \dots, \theta_j - \epsilon, \dots, \theta_n) }{2 \epsilon}
+    \end{equation*}
+  \item Use this to compare to derivs we get from back-propagation. Don't use it for training! It will be very slow.
+\end{itemize}
+
 \end{document}
