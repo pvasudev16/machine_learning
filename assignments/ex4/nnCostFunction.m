@@ -24,11 +24,14 @@ Theta2 = reshape(nn_params((1 + (hidden_layer_size * (input_layer_size + 1))):en
 
 % Setup some useful variables
 m = size(X, 1);
+
+I = eye(num_labels);
          
 % You need to return the following variables correctly 
 J = 0;
 Theta1_grad = zeros(size(Theta1));
 Theta2_grad = zeros(size(Theta2));
+
 
 % ====================== YOUR CODE HERE ======================
 % Instructions: You should complete the code by working through the
@@ -61,6 +64,15 @@ Theta2_grad = zeros(size(Theta2));
 %               the regularization separately and then add them to Theta1_grad
 %               and Theta2_grad from Part 2.
 %
+X = [ ones(size(X,1),1), X];
+a2 = sigmoid(X*Theta1');
+a2 = [ ones(size(a2,1),1), a2];
+a3 = sigmoid(a2*Theta2'); % 5000 x 10
+
+for i=1:m
+  J = J + 1./m*(-log(a3)*I(:,y(i)) - (1.-I(:,y(i)))*log(1-a3));
+endfor
+
 
 
 
