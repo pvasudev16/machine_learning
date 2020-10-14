@@ -70,7 +70,7 @@ a2 = [ ones(size(a2,1),1), a2];
 a3 = sigmoid(a2*Theta2'); % 5000 x 10
 
 for i=1:m
-  J = J + 1./m*(-log(a3)*I(:,y(i)) - (1.-I(:,y(i)))*log(1-a3));
+  J = J + 1./m*(-log(a3(i,:))*I(:,y(i)) - log(1-a3(i,:))*(1.-I(:,y(i))));
 endfor
 
 
