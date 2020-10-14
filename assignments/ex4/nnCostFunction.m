@@ -73,6 +73,8 @@ for i=1:m
   J = J + 1./m*(-log(a3(i,:))*I(:,y(i)) - log(1-a3(i,:))*(1.-I(:,y(i))));
 endfor
 
+reg = lambda/(2.*m)*(sum(sum(Theta1(:,2:end).^2)) + sum(sum(Theta2(:,2:end).^2)));
+J = J + reg;
 
 
 
