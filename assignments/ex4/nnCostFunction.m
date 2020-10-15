@@ -42,6 +42,15 @@ Theta2_grad = zeros(size(Theta2));
 %         cost function computation is correct by verifying the cost
 %         computed in ex4.m
 %
+X = [ ones(size(X,1),1), X];
+a2 = sigmoid(X*Theta1');
+a2 = [ ones(size(a2,1),1), a2];
+a3 = sigmoid(a2*Theta2'); % 5000 x 10
+for i=1:m
+  J = J + 1./m*(-log(a3(i,:))*I(:,y(i)) - log(1-a3(i,:))*(1.-I(:,y(i))));
+endfor
+reg = lambda/(2.*m)*(sum(sum(Theta1(:,2:end).^2)) + sum(sum(Theta2(:,2:end).^2)));
+J = J + reg;
 % Part 2: Implement the backpropagation algorithm to compute the gradients
 %         Theta1_grad and Theta2_grad. You should return the partial derivatives of
 %         the cost function with respect to Theta1 and Theta2 in Theta1_grad and
@@ -57,6 +66,23 @@ Theta2_grad = zeros(size(Theta2));
 %               over the training examples if you are implementing it for the 
 %               first time.
 %
+Delta_1=0;
+Delta_2=0;
+for t=1:m
+  a1 = X(t,:)'; % already included bias
+  z2 = Theta1*a1;
+  a2 = sigmoid(z2); % hidden layer
+  a2 = [1; a2];
+  z3 = Theta2*a2;
+  a3 = sigmoid(z3); % output layer
+  delta3 = a3 - I(:,y(t));
+  delta2 = Theta2'*delta3;
+  delta2 = delta2(2:end).*sigmoidGradient(z2);
+  Delta_2 = Delta_2 + delta3*a2';
+  Delta_1 = Delta_1 + delta2*a1';
+endfor
+Theta2_grad = 1./m*Delta_2;
+Theta1_grad = 1./m*Delta_1;
 % Part 3: Implement regularization with the cost function and gradients.
 %
 %         Hint: You can implement this around the code for
@@ -64,35 +90,12 @@ Theta2_grad = zeros(size(Theta2));
 %               the regularization separately and then add them to Theta1_grad
 %               and Theta2_grad from Part 2.
 %
-X = [ ones(size(X,1),1), X];
-a2 = sigmoid(X*Theta1');
-a2 = [ ones(size(a2,1),1), a2];
-a3 = sigmoid(a2*Theta2'); % 5000 x 10
-
-for i=1:m
-  J = J + 1./m*(-log(a3(i,:))*I(:,y(i)) - log(1-a3(i,:))*(1.-I(:,y(i))));
-endfor
-
-reg = lambda/(2.*m)*(sum(sum(Theta1(:,2:end).^2)) + sum(sum(Theta2(:,2:end).^2)));
-J = J + reg;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+reg1 = lambda./m.*Theta1(:,2:end);
+reg1 = [zeros(size(Theta1,1),1),reg1];
+reg2 = lambda./m.*Theta2(:,2:end);
+reg2 = [zeros(size(Theta2,1),1),reg2];
+Theta2_grad = Theta2_grad + reg2;
+Theta1_grad = Theta1_grad + reg1;
 
 % -------------------------------------------------------------
 
