@@ -401,7 +401,7 @@
     \end{equation*}
 \end{itemize}
 \hfill \\
-{\large \textbf{8-Oct-2020}: Backpropagation Intutition, Implementation Note, Gradient Checking}
+{\large \textbf{9-Oct-2020}: Backpropagation Intutition, Implementation Note, Gradient Checking}
 \begin{itemize}
   \item Backpropagation Intuition; Quiz: Suppose $\Theta_{11}^{(2)} =
     \Theta_{21}^{(2)} = 0$. After back propagation, what can you say
@@ -419,5 +419,96 @@
     \end{equation*}
   \item Use this to compare to derivs we get from back-propagation. Don't use it for training! It will be very slow.
 \end{itemize}
-
+\hfill \\
+{\large \textbf{13-Oct-2020} Random Initialization, Putting it Together, Autonomous Driving}
+\begin{itemize}
+  \item Random Initialization; Have to give a guess for $\Theta^{(l)}$; can't just guess all 0s. If the initial $\Theta$ are all zero, it means all units are looking at the same features. Initialize $\Theta_{ij}^{(l)}$ to a random $[ -\epsilon, \epsilon ]$.
+  \item Putting it Together; Pick some network architecture. Input
+    layer will have a size of $x^{(1)}$. Output layer is the number of
+    classes. As a default, use one hidden layer. If $>1$ hidden layer,
+    then use the same number of units in each hidden layer.
+    \item To train a neural network:
+      \begin{enumerate}
+        \item Randomly initialize the weights
+        \item Do forward propagation to get $h_{\Theta}(x^{(i)})$ for any $x^{(i)}$.
+        \item Implement code to compute $J( \Theta )$.
+        \item Implement back propagation algorithm to get the partial derivatives. \\
+          The backpropagation algorithm will loop over the training examples. Get $a^{(l)}$ and $\delta^{(l)}$ for $l=1, \dots, L$.
+        \item Use gradient checking to compare partial derivatives from back propagation. Then discard gradient checking.
+        \item Use optimization algorithm to minimize $J( \Theta )$.
+      \end{enumerate}
+    \item Note that $J( \Theta )$ is non-convex. So, the algorithm can get stuck in a local minimum, but this is rare in practice.
+    \item Autonomous Driving; nothing new.
+\end{itemize}
+\hfill \\
+{\large \textbf{15-Oct-2020} Deciding What to Try Next, Evaluating Hypotheses, Model Selection \\ and Train/Validation/Test Sets, Diagnosing Bias vs. Variance, Regularization and Bias/Variance}
+\begin{itemize}
+  \item Deciding What To Try Next; Suppose, for e.g., you've
+    implemented regularized linear regression, and it makes
+    predictions with large errors. Try (i) get more training e.g.s,
+    (ii) reduce the number of features, (iii) try more features, (iv)
+    add polynomial features, (v) increase/decrease $\lambda$.
+  \item Simple way to rule out solutions: diagnostics. It can take a while to implement, but can ultimately pay off.
+  \item Evaluating a Hypothesis; Split the data into a training/test set. Split the data 70/30 randomly.
+  \item For lin. regr., analagous to the training set, the test error is $J_{test}(\theta) = 1/(2m_{test}) \sum_{i=1}^m \left( h_{\theta}(x_{test}^{(i)}) - y_{test}^{(i)} \right)^2$.
+  \item Analagous $J_{test}$ for log. regr. For log. regr., also have misclassification error.
+    \begin{equation*}
+      \text{err}(h_{\theta}(x), y) = \begin{cases} 1 & \mbox{if } h_{\theta}(x) \geq 0.5 \mbox{ and } y=0 \mbox{ OR }  \mbox{ if } h_{\theta}(x) < 0.5 \mbox{ and } y=1 \\ 0 & \mbox{otherwise} \end{cases}
+    \end{equation*}
+    Could then define the test error to be
+    \begin{equation*}
+      J_{test}(\theta) = \frac{1}{m_{test}} \sum_{i=1}^{m_{test}} \text{err}\left( h_{\theta}(x_{test}^{(i)}) - y_{test}^{(i)} \right) \quad \text{misclassification error}
+    \end{equation*}
+  \item Model Selection and Train/Validation/Test Sets; How to choose the polynomial degree $d$? \\
+    \begin{center}
+      \begin{tabular}{ l c c l l }
+        $d=1 \quad$ & $h_{\theta}(x) = \theta_0 + \theta_1x \rightarrow$ & $\min_{\theta}J(\theta) \rightarrow $ & $\theta^{(1)} \rightarrow$ & $J_{test}(\theta^{(1)})$ \\
+        $d=2 \quad$ & $h_{\theta}(x) = \theta_0 + \theta_1x + \theta_2x^2 \rightarrow$ & $\min_{\theta}J(\theta) \rightarrow$ & $\theta^{(2)} \rightarrow$ & $J_{test}(\theta^{(2)})$ \\
+        $\vdots$ & & & & \\
+        $d=n \quad$ & $h_{\theta}(x) = \sum_{k=0}^n \theta_k x^k \rightarrow$ & $\min_{\theta}J(\theta) \rightarrow$ & $\theta^{(n)} \rightarrow$ & $J_{test}(\theta^{(n)})$
+      \end{tabular}
+    \end{center}
+    A problem can be that we're essentially fitting $d$ to the training set. E.g. we find that $J_{test}(\theta^{(5)})$ is the lowest, then we've fit $d=5$ to the training set.
+  \item Split the data into a training, cross-validation (CV), and test set (60-20-20). Get the training, CV, and test errors. Repeat the process.
+    \begin{center}
+      \begin{tabular}{ l c c l l }
+        $d=1 \quad$ & $h_{\theta}(x) = \theta_0 + \theta_1x \rightarrow$ & $\min_{\theta}J(\theta) \rightarrow $ & $\theta^{(1)} \rightarrow$ & $J_{cv}(\theta^{(1)})$ \\
+        $d=2 \quad$ & $h_{\theta}(x) = \theta_0 + \theta_1x + \theta_2x^2 \rightarrow$ & $\min_{\theta}J(\theta) \rightarrow$ & $\theta^{(2)} \rightarrow$ & $J_{cv}(\theta^{(2)})$ \\
+        $\vdots$ & & & & \\
+        $d=n \quad$ & $h_{\theta}(x) = \sum_{k=0}^n \theta_k x^k \rightarrow$ & $\min_{\theta}J(\theta) \rightarrow$ & $\theta^{(n)} \rightarrow$ & $J_{cv}(\theta^{(n)})$
+      \end{tabular}
+    \end{center}
+    Pick a $d$ such that $J_{cv}$ is the smallest, e.g. $\theta^{(4)}$, and then get $J_{test}(\theta^{(4)})$, and assess it. So, use cross-validation to select the model (here, polynomial degree).
+  \item Diagnosing Bias (Underfit) vs. Variance (overfit); cf. lecture 10, slide 17 for a plot of $J_{cv}$, $J_{test}$ vs $d$.
+  \item Bias (underfit): $J_{train}(\theta)$ is high; $J_{train} \approx J_{cv}$. \\
+    Variance (overfit):  $J_{train}(\theta)$ is low; $J_{train} \ll J_{cv}$. \\
+  \item Regularization and Bias/Variance; For linear regression with
+    regularization, 
+    \begin{equation*}
+      J(\theta) = \sum_{i=1}^m\left(h_{\theta}(x^{(i)}) - y^{(i)} \right)^2 + \frac{\lambda}{2m}\sum_{j=1}^m \theta_j^2. 
+    \end{equation*}
+    Suppose we're using a fourth-order polynomial, so $h_{\theta}(x) =
+    \sum_{k=0}^4 \theta_kx^k$.\\ For very large $\lambda$, $\theta_1,
+    \dots, \theta_4 \approx 0$ (heavily penalized) $\rightarrow$ underfit
+    $\rightarrow$ high bias. \\ For very small $\lambda$, $\theta_1,
+    \dots, \theta_4 \neq 0$ (very little regularization) $rightarrow$
+    overfit $\rightarrow$ high variance.\\ We need a goldilocks $\lambda$.
+  \item With regularization, change definitions a bit.
+    \begin{align*}
+      J_{train}(\theta) &= \frac{1}{2m}\sum_{i=1}^m \left( h_{\theta}(x^{(i)}) - y^{(i)} \right)^2 \quad \text{(NO regularization terms)} \\
+      J_{cv}(\theta) &= \frac{1}{2m_{cv}}\sum_{i=1}^{m_{cv}} \left( h_{\theta}(x_{cv}^{(i)}) - y_{cv}^{(i)} \right)^2\\
+      J_{test}(\theta) &= \frac{1}{2m_{test}}\sum_{i=1}^{m_{test}} \left( h_{\theta}(x_{test}^{(i)}) - y_{test}^{(i)} \right)^2
+    \end{align*}
+  \item So, how to select $\lambda$? Get $\theta$ from $\min_{\theta}J(\theta)$ with the regularization.
+    \begin{center}
+      \begin{tabular}{ l c c l l }
+        $1) \quad$ & $\lambda=0 \rightarrow$ & $\min_{\theta}J(\theta) \rightarrow $ & $\theta^{(1)} \rightarrow$ & $J_{cv}(\theta^{(1)})$ \\
+        $2) \quad$ & $\lambda=0.02 \rightarrow$ & $\min_{\theta}J(\theta) \rightarrow$ & $\theta^{(2)} \rightarrow$ & $J_{cv}(\theta^{(2)})$ \\
+        $\vdots$ & & & & \\
+        $n) \quad$ & $\lambda=10 \rightarrow$ & $\min_{\theta}J(\theta) \rightarrow$ & $\theta^{(n)} \rightarrow$ & $J_{cv}(\theta^{(n)})$
+      \end{tabular}
+    \end{center}
+    Pick a model that gives the lowest sum of squares $J_{cv}$, e.g. $\theta^{(5)}$. In other words, we fit $\lambda$ to the c.v. set. Then, see how well $J_{test}(\theta^{(5)})$ is.
+  \item See lecture 10, slide 23 for a plot of $J_{train}, J_{cv}$ vs. $\lambda$.
+\end{itemize}
 \end{document}
