@@ -511,4 +511,46 @@
     Pick a model that gives the lowest sum of squares $J_{cv}$, e.g. $\theta^{(5)}$. In other words, we fit $\lambda$ to the c.v. set. Then, see how well $J_{test}(\theta^{(5)})$ is.
   \item See lecture 10, slide 23 for a plot of $J_{train}, J_{cv}$ vs. $\lambda$.
 \end{itemize}
+\hfill \\
+{\large \textbf{16-Oct-2020} Learning Curves, Deciding What To Do Next}
+\begin{itemize}
+  \item Learning Curves; Plot $J_{cv}$/$J_{train}$ as a function of number of training
+    examples, $m$.ARtificially reduce the training set to $m$
+    examples, for a fixed polynomial degree $h_{\theta}(x)$,
+    e.g. $h_{\theta}(x) = \theta_0 + \theta_1x + \theta_2x^2$.
+  \item High bias: See lec. 10, p.26:
+    $h_{\theta}(x)=\theta_0+\theta_1x$ doesn't fit the data well. More
+    data won't help the straight line fit any better. Adding training
+    examples only improes $J_{cv}$ up to a certain point. We find $J_{train}$ approaches $J_{cv}$.\\
+    $\implies$ if a learning algorithm has high bias, more training e.g.s won't help!
+  \item High variance: see lec.10, p.27: e.g. $h_{\theta}(x) =
+    \sum_{k=0}^{100}\theta_k x^k$. For small $m$, it'll fit the data
+    very well (overfitting). So $J_{train}$ is small for small
+    $m$. But as we include more training examples (larger than the
+    polynomial degree), $h_{\theta}(x)$ doesn't generalize well, and
+    $J_{train}$ increases. $J_{cv}$ starts out high (with a few
+    training examples, $h_{\theta}(x)$ generalizes very poorly. With
+    more training e.g.s, $J_{cv}$ decreases. \\
+    $\implies$ if a learning algorithm has high variance, more training e.g.s will help!
+  \item Deciding What To Do Next Revisited; Recall that we're fitting house prices, but the hypothesis made bad predictions.
+    \begin{enumerate}
+      \item More training e.g.s $\rightarrow$ fixes high variance
+      \item Smaller feature set $\rightarrow$ fixes high variance
+      \item More features $\rightarrow$ fixes high bias
+      \item Add polynomial features $\rightarrow$ fixes high bias
+      \item Decrease $\lambda \rightarrow$ fixes high bias
+      \item Increase $\lambda \rightarrow$ fixes high varaince
+    \end{enumerate}
+  \item Neural Networks: Small networks (few units, few hidden layers)
+    are prone to underfitting, but computationally cheaper\\ Large
+    networks (more units, more hidden layers) are prone to
+    overfitting, and computationally more expensive. \\ You can use
+    regularization to address overfitting.
+  \item How many hidden layers? A sensible default is one hidden layer. But you can use more layers and check $J_{cv}$ and $J_{test}$.
+  \item Quiz: n.n. with one hidden layer and $J_{cv}(\theta) \gg
+    J_{train}(\theta)$. Will increasing the number of hidden units
+    help? No. Since there is a gap between cross validation and
+    training sets, it indicates high variance. So it's overfitting the
+    data, and adding more layers/units won't help.
+\end{itemize}
 \end{document}
