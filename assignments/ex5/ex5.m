@@ -218,3 +218,33 @@ end
 
 fprintf('Program paused. Press enter to continue.\n');
 pause;
+
+%% ======= Optional Ungraded Exercise: Assess Test Error ========== %%
+[theta] = trainLinearReg(X_poly, y, 3.);
+error_test = 1./(2.*size(X_poly_test,1)).*sum((X_poly_test*theta-ytest).^2);
+fprintf('Test error: %f\n',error_test);
+
+%% ======= Randomly Selected Training Sets ======== %%
+J_train = zeros(size(X_poly,1),1);
+J_cv = zeros(size(X_poly,1),1);
+lambda=0.01;
+iterations=50;
+for i=1:size(X_poly,1)
+  J_train_temp = zeros(iterations,1);
+  J_cv_temp = zeros(iterations,1);
+  for j=1:iterations
+    ran = randi(size(X_poly,1),i,1);
+    X_poly_random = X_poly(ran,:);
+    y_random = y(ran,:);
+    [theta] = trainLinearReg(X_poly_random, y_random, lambda);
+    J_train_temp(j) = 1./(2.*i)*sum((X_poly_random*theta - y_random).^2);
+    J_cv_temp(j) = 1./(2.*size(X_poly_val,1))*sum((X_poly_val*theta - yval).^2);
+  endfor
+  J_train(i) = mean(J_train_temp);
+  J_cv(i) = mean(J_cv_temp);
+endfor
+close all;
+plot(1:size(X_poly,1), J_train, 1:size(X_poly,1), J_cv);
+legend('Train', 'Cross Validation');
+xlabel('Training Examples');
+ylabel('Error');
