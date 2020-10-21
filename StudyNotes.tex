@@ -1,6 +1,6 @@
 \documentclass[10pt]{article}
 \usepackage{amsmath}
-\usepackage{array,enumitem,layouts,calc}
+\usepackage{array,enumitem,layouts,calc,diagbox}
 \usepackage[left=2.2cm,right=2.2cm,top=2.0cm,bottom=2.0cm]{geometry}
 \setlist{nosep,leftmargin=2em,rightmargin=0em}
 %\usepackage{mathptmx}
@@ -552,5 +552,125 @@
     help? No. Since there is a gap between cross validation and
     training sets, it indicates high variance. So it's overfitting the
     data, and adding more layers/units won't help.
+\end{itemize}
+\hfill \\
+{\large \textbf{20-Oct-2020} Prioritizing What To Work On, Error Analysis, Error Metrics for Skewed Classes, Trading Off Precision/Recall, Data for Machine Learning, Large Margin Classification: Optimization Objective, Large Margin Intuition}
+\begin{itemize}
+  \item Prioritizing What to Work On; Building a spam classifier. Let
+    $y=0 \implies$ not spam, and $y=1 \implies$ spam. Features? Choose
+    100 words, e.g. $\underbrace{\text{deal, buy, discount,
+    }}_{\text{spam words}} \underbrace{\text{andrew, now,
+          home}}_{\text{non-spam words}}$. Then, for an e-mail, build a feature vector
+    \begin{equation*}
+      \begin{matrix} x_1 \\ x_2 \\ \vdots \\ x_{100} \end{matrix} 
+      \begin{bmatrix}1 \\ 0 \\ \vdots \\ 1 \end{bmatrix}
+      \begin{matrix} \rightarrow \\ \rightarrow \\ \vdots \\ \rightarrow \end{matrix} 
+      \begin{matrix}\text{deal} \\ \text{buy} \\ \vdots \\ \text{now}\end{matrix}
+    \end{equation*}
+    where
+    \begin{equation*}
+      x_j = \begin{cases} 1 & \mbox{if the word } j \mbox{ is in the e-mail} \\ 0 & \mbox{otherwise }\end{cases}
+    \end{equation*}
+  \item How to get low error? More data, possibly. Could use more
+    sophisticated features based on the header (e.g. routing
+    info). Could also use more sophisticated features based on words
+    (e.g. deal vs. Dealer; are these the same words?). Could also use
+    more features based on punctuation. Could introduce features based on misspelling.
+  \item Error Analysis; Look at examples the algorithm gets wrong. Look at the features. What additional features would help improve the accuracy?
+  \item Numerical error: Have a single real number as a metric for how good the algorithm is. One example is $J_{cv}$.
+  \item See ``porter stemming'' for natural language processing (NLP).
+  \item \textit{Always} start with a quick and dirty implementation of an algorithm. Then check learning curves, and then analyze features.
+  \item Error Metrics for Skewed Classes; Consider classifying
+    benign/malignant ($y=0$/$y=1$) tumors where 99.5\% of the cases
+    are benign. Say we've trained a logistic regression, and we get
+    99.0\% accuracy. But, suppose our algorithm just always retuend
+    $y=0$ regardless of any features $x$. Then, we'd get 0.5\% errror!
+    The reason is that this is a skewed class; there is much more of
+    one class than the other. For skewed classes, just classification error isn't a good metric.
+  \item Precision/Recall:
+    \begin{center}
+      \begin{tabular}{ | c | c | c| }
+        \hline
+        \diagbox{Predicted}{Actual} & 1 & 0 \\
+        \hline
+        1 & True Positive & False Positive \\
+        \hline
+        0 & False Negative & True Negative \\
+        \hline
+      \end{tabular}
+    \end{center}
+    \begin{align*}
+      \text{Precision} &= \frac{\text{True Positives}}{\text{Predicted Positives}} \\
+      &= \frac{\text{True Positives}}{\text{True Positives + False Positives}} \quad \text{denom is sum of first row in table}\\
+      \text{Recall} &= \frac{\text{True Positives}}{\text{Actual Positives}} \\
+      &= \frac{\text{True Positives}}{\text{True Positives + False Negatives}} \quad \text{denom is sum of first column in table}
+    \end{align*}
+  \item So, the classifier which just sets $y=0$ has a recall of zero, since there are no true positives! Having high precision and recall are good metrics.
+  \item Let $y=1$ be the rarer class when doing precision/recall.
+  \item Trading Off Preicsion/Recall; Continue with the cancer
+    example. Suppose we want to report $y=1$ only if we're very
+    positive. We could increase the threshold: $h_{\theta}(x) \geq 0.8
+    \implies$ higher precision (reduces the false positives) but gives
+    lower recall.
+  \item Suppose we want to avoid missing malignant cases. Reduce the threshold e.g. $h_{\theta}(x) \geq 0.4 \implies$ lower precision and higher recall.
+  \item See lecture 11, p. 13 to see the tradeoff graph between Precision/Recall. (Very loosely, $P = 1-R$.)
+  \item How do we choose the threshold? The problem is that $P$ and
+    $R$ are two numbers. Suppose you have two algorithms. Algorithm 1
+    gives $P=0.2,R=0.7$ and algorithm 2 gives $P=0.8, R=0.1$. Which
+    one is better? It's better to have a single real number.
+  \item $F_1$ Score:
+    \begin{equation*}
+      F_1 = \frac{2PR}{P+R}
+    \end{equation*}
+  \item Data for Machine Learning; For some algorithms, more data can really improve accuracy.
+  \item Large data rationale: Assume that features $x \in \mathcal{R}^{n+1}$ can predict $y$. \\
+    e.g. ``I ate \_\_\_\_\_\_\_\_\_ eggs for breakfast.'' Should the blank be too/two/to? The features $\{$ate, eggs, breakfast$\}$ are enough to tell us. \\
+    e.g. Just the square footage of a house; this is not enough to predict a house price. Need more info such as location, bedrooms, etc. \\
+    A litmus test is ``can a human predict $y$ given $x$?''
+  \item Now a learning algorithm with many parameters (low bias) will
+    fit a training set well. With a very, very large training set,
+    unlikely to overfit. The low bias $\implies J_{train} \approx
+    0$. ``Unlikely to overfit'' $\implies J_{train} \approx J_{cv}
+    \approx 0$.
+  \item Large Margin Classification - Optimization Objective; Recall with logistic regreesion
+    \begin{align*}
+      h_{\theta}(x) &= \frac{1}{1 + \exp \left( - \theta^T x\right)} \\
+      z &= \theta^T x \\
+      g(z) &= \left(1 + e^{-z}\right)^{-1}.
+    \end{align*}
+    We know if $z \gg 0 \implies g(z) \approx 1$ and that $z \ll 0 \implies g(z) \approx 0$. Cost (mod a factor of $1/m$):
+    \begin{equation*}
+      \text{cost} = -y \log h_{\theta}(x) - (1-y) \log( 1 - h_{\theta}(x))
+    \end{equation*}
+  \item See lecture 12, p. 3 for plots of the $\log(\dots)$. Then,
+    come up with a piecewise linear approximation of these
+    functions. Call them $\text{cost}_1$ and $\text{cost}_0$,
+    corresponding to the $y=1,0$ terms.
+  \item For logistic regression, our objective was
+    \begin{equation*}
+      \min_{\theta} \frac{1}{m} \sum_{i=1}^m \left[ y^{(i)} \left( -\log h_{\theta}(x^{(i)}) \right) + (1 - y^{(i)}) \left( -\log \left(1 - h_{\theta}(x^{(i)})\right)\right)\right] + \frac{\lambda}{2m} \sum_{j=1}^m \theta_j^2
+    \end{equation*}
+  \item For support vector machines (SVM), drop $1/m$ by convention
+    \begin{equation*}
+      \min_{\theta}  \sum_{i=1}^m \left( y^{(i)} \text{cost}_1(\theta^Tx^{(i)}) + (1 - y^{(i)}) \text{cost}_0(\theta^Tx^{(i)}) \right) + \frac{\lambda}{2} \sum_{j=1}^m \theta_j^2
+    \end{equation*}
+  \item We parameterize log. regression as
+    $\underbrace{A}_{\text{cost}} + \lambda
+    \underbrace{B}_{\text{regression}}$. For SVM, parameterize as $CA
+    + B$ where $C$ is the regularization parameter. All regularization
+    does is control the relative size of the different terms. Roughly
+    speaking, $C=1/\lambda$. So in SVM, we're doing
+    \begin{equation*}
+      \min_{\theta}  C\sum_{i=1}^m \left( y^{(i)} \text{cost}_1(\theta^Tx^{(i)}) + (1 - y^{(i)}) \text{cost}_0(\theta^Tx^{(i)}) \right) + \frac{\lambda}{2} \sum_{j=1}^m \theta_j^2
+    \end{equation*}
+  \item SVM's hypothesis
+    \begin{equation*}
+      h_{\theta}(x) = \begin{cases} 1 & \mbox{if } \theta^Tx \geq 0  \\ 0 & \mbox{otherwise }\end{cases}
+    \end{equation*}
+  \item Large Margin Intuition; See lecture 12, slide 7 for a summary of SVM cost function and hypothesis.
+  \item Suppose we pick a huge $C$. Then we'll want $\sum_{i=1}^m \left( y^{(i)} \text{cost}_1(\theta^Tx^{(i)}) + (1 - y^{(i)}) \text{cost}_0(\theta^Tx^{(i)}) \right)=0$. \\
+    So whenever $y^{(i)}=1$, need $\theta^T x^{(i)} \geq 1$ (changed this threshold from 0 to 1 to make the algorithm more ``sure''). Conversely, whenever $y^{(i)}=0$, need $\theta^Tx^{(i)} \leq -1$.
+    Really, go look at the slide.
+  \item SVM makes decision boundaries that give the largest margin between the classes, hence Large Margin Classifier.
 \end{itemize}
 \end{document}
