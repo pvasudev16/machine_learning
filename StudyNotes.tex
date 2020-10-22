@@ -673,4 +673,38 @@
     Really, go look at the slide.
   \item SVM makes decision boundaries that give the largest margin between the classes, hence Large Margin Classifier.
 \end{itemize}
+\hfill \\
+{\large \textbf{21-Oct-2020} Large Margin Intuition cont'd, Math. behind LMC, Kernel I}
+\begin{itemize}
+  \item Large Margin Intuition (Continued); Outliers: when $C$ is not too large, SVM can ignore some outliers.
+  \item Mathematics Behind Large Margin Classifiers; For a very large
+    $C$, we are trying to minimize $\sum_{j=1}^n \theta_j^2$, such
+    that $\theta^T x^{(i)} \geq 1$ for $y=1$ and $\theta^T x^{(i)}
+    \leq -1$ for $y=0$.
+  \item Say $n=2$. Then, our minimization objective is
+    \begin{equation*}
+      \frac{1}{2}\left( \theta_1^2 + \theta_2^2 \right) = \frac{1}{2} \left| \theta \right|^2,
+    \end{equation*}
+    where, WLOG, $\theta_0=0$ and $\theta$ is a vector.
+  \item See lecture 12, p. 13. We can write $\theta^Tx^{(i)}=p^{(i)}\left| \theta \right|$, where $p^{(i)}$ is the projection of $x^{(i)}$ onto $\theta$. The optimization objective is now
+    \begin{equation*}
+      \frac{1}{2}\sum_{j=1}^n \theta_j^2 \quad \mbox{ if } \quad p^{(i)}\left| \theta \right|  \begin{cases} \geq 1 & \mbox{ if } y^{(i)}=1 \\ \leq -1 & \mbox{ if } y^{(i)}=0 \end{cases}
+    \end{equation*}
+  \item $\theta$ is orthogonal to the decision boundary. Algorithm
+    chooses decision boundary such that $p^{(i)}$ is larger and so
+    that $|\theta|$ is smaller. (Based on the requirement that
+    $p^{(i)}\left| \theta \right| \geq/\leq -1/+1$.
+  \item We assumed $\theta_0 = 0$. If we allow $\theta_0 \neq 0$, we allow boundaries that don't pass through the origin.
+  \item Kernels I; We saw complex decision boundaries based on polynomal features. Let's redefine our features. In $x$-space, define some landmarks $l^{(1)},l^{(2)},l^{(3)}$. Make new features given $x$. \\
+    \begin{center}
+      \begin{tabular}{c c c}
+        $x \rightarrow$ & $f_1 = \text{similarity}(x, l^{(1)})$ & $= \exp \left( \frac{ \left| x - l^{(1)} \right|^2}{2 \sigma^2 }\right)$ \\
+                        & $f_2 = \text{similarity}(x, l^{(2)})$ & $= \exp \left( \frac{ \left| x - l^{(2)} \right|^2}{2 \sigma^2 }\right)$ \\
+                        & $f_3 = \text{similarity}(x, l^{(3)})$ & $= \exp \left( \frac{ \left| x - l^{(3)} \right|^2}{2 \sigma^2 }\right)$
+      \end{tabular}
+    \end{center}
+  \item We call the similarity the ``kernel.'' Gaussian kernel
+    here. Write $k(x, l^{(i)})$. The new features die off
+    exponentially the further they are from the landmarks.
+\end{itemize}
 \end{document}
