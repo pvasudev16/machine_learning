@@ -707,4 +707,74 @@
     here. Write $k(x, l^{(i)})$. The new features die off
     exponentially the further they are from the landmarks.
 \end{itemize}
+\hfill \\
+{\large 22-Oct-2020: Kernels II, Using an SVM}
+\begin{itemize}
+  \item Where do we get the landmarks? Put the landmarks at the training examples. Given $(x^{(1)},y^{(1)}), \dots, (x^{(m)},y^{(m)})$, let $l^{(k)}=x^{(k)}$.
+  \item Given a training example $x^{(i)}$ \\
+    \begin{center}
+      \begin{tabular}{c c c}
+        $x^{(i)}\rightarrow$ & $f_1^{(i)}$ &= $\text{sim}(x^{(i)},l^{(1)})$ \\
+                             & $f_2^{(i)}$ &= $\text{sim}(x^{(i)},l^{(2)})$ \\
+        &$\vdots$ & \\
+                             & $f_i^{(i)}$ &= $\text{sim}(x^{(i)},l^{(i)})=1$ \\
+        &$\vdots$ & \\
+                             & $f_m^{(i)}$ &= $\text{sim}(x^{(i)},l^{(m)})$ \\
+      \end{tabular}
+    \end{center}
+    (Hold the training e.g. fixed, and get the similarity with every landmark. We've taken an $n(+1)$ dimensional vector ($x^{(i)}$) and turned it into an $m$-dimensional one ($f^{(i)}$). Note that now with these new $f^{(i)}$, $\theta$ will be $m+1$ dimensional.)
+  \item So $x^{(i)} \in \mathcal{R}^{n+1}$ gets mapped to $\begin{bmatrix} f_0^{(i)} \\ \vdots \\ f_n^{(i)}\end{bmatrix}$.
+  \item Hypothesis: Given $x$, compute $f \in \mathcal{R}^{m+1}$ \\
+    Predict $y=1$ if $\theta^T f \geq 1$. \\
+    Train:
+    \begin{equation*}
+      \min_{\theta} \sum_{i=1}^m \left( y^{(i)} \text{cost}_1(\theta^T f^{(i)}) + (1-y^{(i)}) \text{cost}_0 (\theta^T f^{(i)} )\right) + \frac{1}{2}\sum_{j=1}^n \theta_j^2,
+    \end{equation*}
+    and this will give $\theta$.
+  \item How to choose $C$? \\
+    Large $C \implies$ high variance \\
+    Small $C \implies$ low variance \\
+    Large $\sigma^2 \implies$ High Bias (Low Variance)
+    Small $\sigma^2 \implies$ High Variance
+  \item Using an SVM; Use \texttt{liblinear} or \texttt{libsvm}. We need to chose $C$ and the kernel. (No kernel is the same as linear kernel).
+  \item No kernel means that similarity$(x,l)=1$. This does $y=1$ if $\theta^Tx \geq 0$. Use this if we have a large number of features and few training examples.
+  \item Gaussian kernel means we need to choose $\sigma^2$ too. Use this kernel if number of features and/or number of training examples is large. Perform feature scaling first!
+  \item Not all kernels are valid. They must satisfy Mercer's theorem. Use linear or Gaussian kernels. Another kernel is a polynomial kernel $k(x,l)=(x^Tl + \text{const})^d$. Intuition: if $x$ and $l$ are similar, $x^Tl$ will be large.
+  \item Multiclass: most pacakges have multiclass built in. Otherwise, use one-vs.-all.
+  \item Logistic Regression vs. SVM:
+    \begin{itemize}
+      \item If $n \geq m$, use log. regr. or use SVM without a kernel.
+      \item If $n$ is small, and $m$ is intermediate, use SVM with a Gaussian kernel.
+      \item If $n$ is small, and $m$ is huge, then (i) create or add features and/or (ii) use SVM without a kernel or (iii) use logistic regression.
+    \end{itemize}
+  \item SVMs have a convex cost function, so they will always find the global minimum.
+\end{itemize}
+\hfill \\
+{\large \textbf{26-Oct-2020}: Clustering, K-Means Algorithm}
+\begin{itemize}
+  \item Unsupervised Learning: You have a training set $\{ x^{(1)},\dots,x^{(m)}\}$ but no $y$'s. The algorithm will ``find paterns in the data.'' This is clustering.
+  \item K-Means Algorithm; This is the most common clustering algorithm. Cf. lecture 13, pp. 6-14.
+    \begin{itemize}
+      \item Randomly initialize two centroids.  Call them 1 and 2.
+      \item Go through all the points and find out if they're closer to centroid 1 or centroid 2. 
+      \item For all the points that were labelled as centroid 1, find the ``centre of mass.'' Do the same thing for centroid 2.
+      \item Replace the cluster centroids at the centres-of-mass.
+      \item Repeat the previous four steps util we're done. We're done when the centroids don't move anymore.
+    \end{itemize}
+  \item The input to this algorithm is $K$, the number of clusters, the training set $\{ x^{(1)},\dots,x^{(m)}\}$, $x^{(i)} \in \mathcal{R}^n$ (drop $x_0=1$). Randomly assign the centroids $\mu_1, \dots, \mu_K$. \\
+    \texttt{for i=1:m}
+    \begin{itemize}
+      \item $c(i):=$ index of centroid that is closest to $x^{(i)}$, i.e. $c(i) = \min_k \left| x^{(i)} - \mu_k \right|^2$.
+    \end{itemize}
+    \texttt{for k=1:K}
+    \begin{itemize}
+      \item $\mu_k:=$ the average of points assigned to cluster $k$. \\ (e.g. if $c^{(1)}=2, c^{(5)}=2, c^{(6)}=2$, then $\mu_k = (x^{(1)} + x^{(5)} + x^{(6)})/3$. \\
+        (Note: if there are no points assigned to one centroid, eliminate it [most common], or re-randomize it.)
+    \end{itemize}
+  \item What if the points are not well separated? E.g. suppose you
+    have (weight,height) pairs, and you're trying to figure out for
+    which $(w,h)$ should correspond S,M,L t-shirt sizes. Apparently,
+    K-means will divide up the data and figure out what $(w,h)$
+    correspond to S,M,L. (Unclear about this point.)
+\end{itemize}
 \end{document}
