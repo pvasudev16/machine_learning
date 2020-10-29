@@ -777,4 +777,38 @@
     K-means will divide up the data and figure out what $(w,h)$
     correspond to S,M,L. (Unclear about this point.)
 \end{itemize}
+\hfill \\
+{\large \textbf{27-Oct-2020}: Optimization Objective, Random Initialization, Choosing the Number of Clusters, Motivation I: Data Compression, Motivation II: Data Visualization}
+\begin{itemize}
+  \item Optimization Objective; Introduce $\mu_{c^{(i)}}=$ cluster centroid \textit{of cluster} to which $x^{(i)}$ has been assigned. e.g. $x^{(i)}$ belongs to cluster 5. Then $c^{(i)}=5$ and $\mu_{c^{(i)}}=\mu_5$.
+  \item The cost function
+    \begin{equation*}
+      J(c^{(1)},\dots,c^{(m)},\mu_1,\dots,\mu_k) = \frac{1}{m} \sum_{i=1}^m \left| x^{(i)} - \mu_{c^{(i)}} \right|^2,
+    \end{equation*}
+    and the optimization objective
+    \begin{equation*}
+      \min_{\substack{c^{(1)},\dots,c^{(m)} \\ \mu_1,\dots,\mu_k}} J\left(c^{(1)},\dots,c^{(m)},\mu_1,\dots,\mu_k\right).
+    \end{equation*}
+  \item In our algorithm the first step ($c^{(i)}=$ index of cluster
+    centroid closest to $x^{(i)}$, i.e. cluster assignment step) is
+    minimizing $J$ w.r.t. $c^{(1)},\dots,c^{(m)}$ while holding $k$
+    fixed. \\ The ``move centroid step'' ($\mu_k:=$ mean of points
+    assigned to cluster $k$) minimizes $J$ w.r.t. $\mu_1,\dots,\mu_k$.
+  \item Random Initialization; Let $K<m$. Randomly assign the centroids to $K$ training examples.
+  \item The optimization can run into local optima if initialization
+    is unlucky (e.g. if two centroids get randomly picked within the
+    same cluster.) To avoid this, use many random initializations and
+    run K-means many times.
+  \item Run K-means many times (e.g. 50-1000). For each iteration, you'll get a $J\left(c^{(1)},\dots,c^{(m)},\mu_1,\dots,\mu_k\right)$. Choose the iteration that gives the lowest cost.
+  \item If you have few clusters e.g. $K$=2-10, then multiple random initiations can be quite helpful. This is less helpful for large $K \sim 10^2 \text{ to } 10^3$.
+  \item Choosing the Number of Clusters; Elbow: plot $J$ vs. $k$. If there is a clear ``kink'' or elbow, choose the number of clusters at the kink. Though, this doesn't always happen.
+  \item Can also consider the purpose: e.g. S,M,L or XS,S,M,L,XL t-shirts. Three or five clusters.
+  \item Motivation I: Data Compression; Highly redundant features,
+    e.g. $x_1=$ length in inches, $x_2=$ length in cm. On an
+    $x_2$-$x_1$ diagram, they lie on a straight line. $x^{(i)} \in
+    \mathcal{R}^2 \rightarrow z^{(i)} \in \mathcal{R}$.
+  \item Motivation II: Data Visualization; E.g. Countries have GDP, population, HDI, etc. Maybe $x^{(i)}\in\mathcal{R}^{100}$. If we can reduce this to two features, then we can plot it as $(z_1,z_2)$.
+  \item Note that when we reduce dimensionality, the algorithm doesn't
+    ascribe any meaning to the new features; that's up to us.
+\end{itemize}
 \end{document}
