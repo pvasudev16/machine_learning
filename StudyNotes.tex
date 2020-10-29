@@ -811,4 +811,27 @@
   \item Note that when we reduce dimensionality, the algorithm doesn't
     ascribe any meaning to the new features; that's up to us.
 \end{itemize}
+\hfill \\ 
+{\large \textbf{28-Oct-2020}: Principal Component Analysis, PCA Algorithm, Reconstruction from Compressed Representation}
+\begin{itemize}
+  \item Principal Component Analysis; Project the data onto a lower dimensional surface such that
+    the ``projection error'' (i.e. sum of squares of the distance
+    between the point and the surface) is minimal. E.g. For 2-D data,
+    find a line (the lower dim. surface) s.t. the sum of squares of
+    the distance between the point and its projection onto the line is
+    minimal.) See lecture 14, p.11.
+  \item PCA problem: \\
+    To reduce 2-D to 1-D: find a direction $u^{(1)} \in \mathcal{R}^2$ onto which to project the data so as to minimize the projection errors.\\
+    To reduce $n$-D to $k$-D: find $k$ vectors $u^{(1)},\dots,u^{(k)} \in \mathcal{R}^n$ onto which to project the data so as to minimize the projection errors.
+  \item PCA is not linear regression; linear regression minimizes a different square distance rror. In PCA, we have no special variable $y$.
+  \item PCA Algorithm; Pre-process the data with feature scaling!!!
+  \item PCA needs to (i) calculate the $u^{(j)}$ for $j=1,\dots,k$ vectors and (ii) calculate $z^{(i)}$ from $x^{(i)}$.
+  \item Algorithm: reduce data from $n$-D to $k$-D. \\
+    Compute covariance matrix: $\Sigma = \frac{1}{m}\sum_{i=1}^m x^{(i)}\left( x^{(i)} \right)^T$ \\
+    Compute eigenvectors: \texttt{ [U,S,V] = svd}$\left( \Sigma \right)$. \texttt{U} is $n \times n$ with each of the column representing an eigenvector\\
+    Take the first $k$ columns (i.e. the first $k$ eigenvectors) to get $U_{red} = \begin{bmatrix} \vline &  & \vline \\ u^{(1)} & \dots & u^{(k)} \\ \vline &  & \vline \end{bmatrix}$ \\
+    Then, to get the $k$-dimensional feature $z$, go $z = U_{red}^T x$.
+  \item This takes $x \in \mathcal{R}^n \rightarrow z \in \mathcal{R}^k$.
+  \item Reconstruction from Compressed Representation; $x_{approx} = U_{red} z$.
+\end{itemize}
 \end{document}
