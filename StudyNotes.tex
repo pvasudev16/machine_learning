@@ -834,4 +834,37 @@
   \item This takes $x \in \mathcal{R}^n \rightarrow z \in \mathcal{R}^k$.
   \item Reconstruction from Compressed Representation; $x_{approx} = U_{red} z$.
 \end{itemize}
+\hfill \\
+{\large \textbf{29-Oct-2020}: Choosing the Number of Principal Components, Advice for Applying PCA}
+\begin{itemize}
+  \item $k$ is the number of principal components \\
+    Average squared projection error: $\frac{1}{m}\sum_{i=1}^m \left| x^{(i)} - x_{approx}^{(i)}\right|^2$ \\
+    Total variance of data: $\frac{1}{m}\sum_{i=1}^m \left| x^{(i)} \right|^2$.
+  \item Choose $k$ to be the smallest value such that
+    \begin{equation*}
+      \frac{\sum_{i=1}^m \left| x^{(i)} - x_{approx}^{(i)} \right|^2}{\sum_{i=1}^m \left| x^{(i)} \right|^2} \leq 0.01,
+    \end{equation*}
+    i.e. 99\% of the variance is retained.
+  \item One algorithm (don't use this) would be as follows:
+    \begin{itemize}
+      \item Try PCA with $k=1$
+      \item Computer $U_{red}, z^{(1)}, \dots, z^{(m)}, x_{approx}^{(1)},\dots,x_{approx}^{(m)}$.
+      \item Check if $\frac{\sum_{i=1}^m \left| x^{(i)} - x_{approx}^{(i)} \right|^2}{\sum_{i=1}^m \left| x^{(i)} \right|^2} \leq 0.01$.
+      \item If it's not, try $k=2$, and so on.
+    \end{itemize}
+  \item However, this is very inefficient. There is a better way. We did \texttt{[U,S,V] = svd(Sigma)}. The $S$ matrix (covariance matrix) is $\begin{bmatrix}s_{11} & & \\ & \ddots & \\ & & s_{nn}\end{bmatrix}$. It turns out that:
+    \begin{equation*}
+      \frac{\sum_{i=1}^m \left| x^{(i)} - x_{approx}^{(i)} \right|^2}{\sum_{i=1}^m \left| x^{(i)} \right|^2} = \frac{1 - \sum_{i=1}^k S_{ii}}{\sum_{i=1}^n S_{ii}}.
+    \end{equation*}
+    \item So, we just need to look at the values of $S$, and keep summing up the diagonal elements until we retain 99\% of the variance.
+    \item Advice for Applying PCA; PCA can be used to speed up supervised learning problems. Train on compressed data.
+    \item Training set $\{ (x^{(1)},y^{(1)}), \dots, (x^{(m)},y^{(m)}) \}$. Say that $x^{(i)} \in \mathcal{R}^{10,000}$. \\
+      Now, $x^{(1)}, \dots, x^{(m)} \xrightarrow[\text{PCA}]{} z^{(1)}, \dots, z^{(m)} \in \mathcal{R}^{1,000}$. \\
+      This gives a new training set $\{ (z^{(1)},y^{(1)}), \dots, (z^{(m)},y^{(m)}) \}$\\
+      Now use this training set to train the learning algorithm.
+    \item PCA gives a mapping from $x \mapsto z$. The mapping should be defined only by running PCA on the training set. \textit{Apply} the mapping to $x_{cv}$ and $x_{test}$.
+    \item For visualization, choose $k=2$ or $k=3$.
+    \item Might think PCA can be used to avoid overfitting. In other words, reduce the number of features from $n=10,000$ to $k=1,000$. You might think that fewer features means it's less likely to overfit. This is bad! Just use regularization.
+    \item Don't automatically jump to PCA; try training learning algorithms on raw data. Only if the algorithm runs too slow, or you run out of disk space, then apply PCA.
+\end{itemize}
 \end{document}
