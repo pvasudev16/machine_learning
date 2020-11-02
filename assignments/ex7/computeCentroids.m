@@ -25,7 +25,11 @@ centroids = zeros(K, n);
 %
 % Note: You can use a for-loop over the centroids to compute this.
 %
-
+for k=1:K
+  kIndex = idx == k; % kIndex is a column vector of 1/0 indicating whether idx was or was not k.
+  x = X(kIndex,:); % Select all training examples who are closest to centroid k
+  centroids(k,:) = sum(x)./sum(kIndex);
+endfor
 
 
 
