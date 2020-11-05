@@ -900,6 +900,25 @@
       \item Test: 2-\% of the non-anomalous data, 50\% of the anomalous data.
     \end{itemize}
   \item Training: $\{ x^{(1)}, \dots, x^{(m)}\}$ \\
-    Cross-Validation: $\{ (x_{cv}^{(1)}, y^{(1)}), \dots, (x_{cv}^{(m_{cv})}, y^{(m_{cv})}) \}$
+    Cross-Validation: $\{ (x_{cv}^{(1)}, y^{(1)}), \dots, (x_{cv}^{(m_{cv})}, y^{(m_{cv})}) \}$ \\
+    Test : $\{ (x_{test}^{(1)}, y_{test}^{(1)}), \dots, (x_{test}^{(m_{test})}, y_{test}^{(m_{test})})\}$
+  \item Fit the model $p(x)$ on the training set. On the cross validation/test set, predict $y=\begin{cases}  1 & \mbox{ if } p(x) < \epsilon \text{ (anomalous)} \\ 0 & \mbox{ if } p(x) \geq \epsilon \text{ (ok)} \end{cases}$ \\
+    This is a \textit{skewed class}! Classification rate is not a good metric. Consider true positives, false positives, false negatives, true negatives. Use precision/recall or $F_1$. \\
+    Use the cross validation set to fit $\epsilon$.
+  \item Anomaly Detection vs. Supervised Learning; cf. lecture 15, p. 18.
+  \item Choosing What Features To Use; \\ Transform: Suppose you have
+    a feature, and its histogram is non-Gaussian. Transform it to try
+    to make it more Gaussian. Take the logarithm, raise it to
+    different powers (e.g. 0.5, 0.1, 0.03, etc.) to make it
+    Gaussian. \\ Error Analysis: Most common problem is that $p(x)$ is
+    comparable for anomalous and non-anomalous features. Look at the
+    anomalous examples. Can you come up with another feature that will
+    differentiate the anomalous feature from the non-anomalous one? Cf. lecture 15, p.23.
+  \item Multivariate Gaussian; Let $\mu \in \mathcal{R}^n$, $\Sigma \in \mathcal{R}^{n \times n}$. 
+    \begin{equation*}
+      p(x, \mu, \Sigma) = \frac{1}{(2\pi)^{n/2} \left| \Sigma \right|^{1/2}} \exp \left( -\frac{1}{2} (x - \mu)^T \Sigma^{-1} (x-\mu)\right),
+    \end{equation*}
+    where $\left| \Sigma \right|$ is the determinant of $\Sigma$. 
+  \item $\Sigma$ controls the width/orientation. Cf. lecture 15, pp.27-32.
 \end{itemize}
 \end{document}
