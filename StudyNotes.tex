@@ -867,4 +867,39 @@
     \item Might think PCA can be used to avoid overfitting. In other words, reduce the number of features from $n=10,000$ to $k=1,000$. You might think that fewer features means it's less likely to overfit. This is bad! Just use regularization.
     \item Don't automatically jump to PCA; try training learning algorithms on raw data. Only if the algorithm runs too slow, or you run out of disk space, then apply PCA.
 \end{itemize}
+\hfill \\ {\large \textbf{3-Nov-2020}: Problem Motivation, Density
+  Estimation, Gaussian Distribution, Algorithm, Developing and
+  Evaluating an Anomaly Detection System, Anomaly Detection
+  vs. Supervised Learning, Choosing What Features to Use, Multivariate
+  Gaussian Distribution}
+\begin{itemize}
+  \item Problem Motivation - Density Estimation; Suppose you're
+    building aircraft engines. You test two features $x_1$ = heat
+    generated, and $x_2$ = vibration intensity. You have this data for
+    $m$ examples. $\{ x^{(1)}, \dots, x^{(m)}\}$. Now, you have a new
+    engine, with features $x_{test}$. How do you know if it's
+    anomalous? Based on the training set, construct a model $p(x)$. If
+    $p(x_{test})<\epsilon$, then you can flag it as anomalous. If
+    $p(x_{test}) \geq \epsilon$ means it's ok.
+  \item Gaussian Distribution; Nothing new. $\mu = \frac{1}{m}\sum_ix^{(i)}$, $\sigma^2 = \frac{1}{m} \sum_i ( x^{(i)} - \mu)^2, x^{(i)} \sim \mathcal{N}(x^{(i)}; \mu, \sigma^2)$.
+  \item Algorithm; \\ $p(x) = \prod_{j=1}^n p(x_j; \mu_j, \sigma_j^2)$ where $p(x_j; \mu_j, \sigma_j^2) \sim \mathcal{N}(x_j; \mu_j, \sigma_j^2) = \frac{1}{\sqrt{2 \pi \sigma_j^2}} \exp \left( \frac{-(x_j - \mu_j)^2}{2 \sigma_j^2}\right)$.
+    \begin{enumerate}
+      \item Choose features $x_i$ that may indicate anomalies.
+      \item Fit parameters $\mu_1, \dots, \mu_n, \sigma_1, \dots, \sigma_n$
+      \item Given a new example, $x$, compute $p(x)$
+        \begin{equation*}
+          p(x) = \prod_{j=1}^n p(x_j; \mu_j, \sigma_j^2) = \prod_{j=1}^n \frac{1}{\sqrt{2 \pi \sigma_j^2}} \exp \left( \frac{-(x_j - \mu_j)^2}{2 \sigma_j^2}\right),
+        \end{equation*}
+        Anomaly if $p(x) < \epsilon$.
+    \end{enumerate}
+  \item Developing and Evaluating an Anomaly Detection System; It's best to have a single real numbet as a metric to assess our anomaly detection algorithm.
+  \item Assume we have some labelled data $\{ x^{(1)}, \dots, x^{(m)} \}$, so we know if $x^{(i)}$ is anomalous or not. Split the data
+    \begin{itemize}
+      \item Training Set: 6-\% of the data, almost all non-anomalous.
+      \item Cross Validation: 2-\% of the non-anomalous data, 50\% of the anomalous data.
+      \item Test: 2-\% of the non-anomalous data, 50\% of the anomalous data.
+    \end{itemize}
+  \item Training: $\{ x^{(1)}, \dots, x^{(m)}\}$ \\
+    Cross-Validation: $\{ (x_{cv}^{(1)}, y^{(1)}), \dots, (x_{cv}^{(m_{cv})}, y^{(m_{cv})}) \}$
+\end{itemize}
 \end{document}
