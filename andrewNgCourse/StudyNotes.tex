@@ -922,4 +922,115 @@
     where $\left| \Sigma \right|$ is the determinant of $\Sigma$. 
   \item $\Sigma$ controls the width/orientation. Cf. lecture 15, pp.27-32.
 \end{itemize}
+\hfill \\
+{\large \textbf{6-Nov-2020}: Anomaly Detection using Multivariate Gaussian Distributions}
+\begin{itemize}
+  \item Algorithm: fit $p(x)$ by picking
+    \begin{enumerate}
+      \item $\mu = \frac{1}{m}\sum_{i=1}^m x^{(i)}$ \\
+        $\Sigma = \frac{1}{m} \sum_{i=1}^m (x^{(i)} - \mu)(x^{(i)}-\mu)^T$
+      \item Given a new example, compute $p(x)$.
+        \begin{equation*}
+          p(x) = \frac{1}{(2\pi)^{n/2}|\Sigma|^{1/2}} \exp \left( -\frac{1}{2} (x-\mu)^T \Sigma^{-1} (x-\mu)\right),
+        \end{equation*}
+        and flag an anomaloy if $p(x) < \epsilon$.
+    \end{enumerate}
+  \item Note that inverting $\Sigma$ can be expensive.
+  \item Multivariate Gaussian is identical to the original model if $\Sigma$ has zero off-diagonals.
+  \item When should we use multivariate Gaussians and when should we use the original model? Cf. lecture 15, p. 37. Multivariate scales less well to large $n$. Require $m > n$. In practice, you need $m \geq 10n$ for multivariate.
+  \item $\Sigma$ may be non-invertible if some features are linearly dependent.
+\end{itemize}
+\hfill \\
+{\large \textbf{10-Nov-2020} Predictive Movie Ratings: Problem Formulation, Content Based Recommendation, Collaborative Filtering, Collaborative Filtering Algo., Vectorization: Low Rank Matrix Factorization, Mean Normalization}
+\begin{itemize}
+  \item Recommender systems of commercial application.
+  \item Conventions: $n_u$ = \# of users, $n_m$ = \# of movies, $r(i,j)=1$ if user $j$ has rated movie $i$, $y^{(i,j)}$ = rating given to movie $j$ by user $i$ (defined only if $r(i,j)=1$)
+  \item Can our learning system fillin values for ratings which a user hasn't given?
+  \item Content Based Recommendations; Say for each movie, we have features $x_1$ (e.g. how romantic a movie is, between 0 and 1) and $x_2$ (e.g. how action packed a movie is between 0 and 1). Represent a movie as
+    \begin{equation*}
+      x^{(i)} = \begin{bmatrix} x_0^{(i)} \\ x_1^{(1)} \\ x_2^{(i)} \end{bmatrix}.
+    \end{equation*}
+  \item Treat it as a regression problem for each user. \\ For each
+    user $j$, learn a parameter $\theta^{(j)} \in \mathcal{R}^{n+1}$
+    (in this example, $n=2$). 
+    \begin{equation*}
+      \text{Predicted rating for movie $i$ by user $j$} =  (\theta^{(j)})^T x^{(i)}.
+    \end{equation*} (cf. lecture 16, p. 10 for an
+    e.g. of $\theta^{(j)}$ for Alice, who likes romantic movies, but
+    not so much action movies.)
+  \item To learn $\theta^{(j)}$:
+    \begin{equation*}
+      \min_{\theta^{(j)}} \frac{1}{2} \sum_{i:r(i,j)=1} \left( \left( \theta^{(j)} \right)^T x^{(i)} - y^{(i,j)}\right)^2 + \frac{\lambda}{2} \sum_{k=1}^n \left( \theta_k^{(j)} \right)^2,
+    \end{equation*}
+    where $i:r(i,j)=1$ means ``all $i$ such that $r(i,j)=1$.'' As usual, don't regularize the constant feature of the parameter vector.
+  \item To learn for many users, i.e. $\theta^{(1)}, \dots, \theta^{(n_u)}$.
+    \begin{equation*}
+      \min_{\theta^{(1)}, \dots, \theta^{(n)}} \underbrace{\frac{1}{2} \sum_{j=1}^{n_u} \sum_{i:r(i,j)=1} \left( \left( \theta^{(j)} \right)^T x^{(i)} - y^{(i,j)}\right)^2 +  \frac{\lambda}{2} \sum_{j=1}^{n_u}\sum_{k=1}^n \left( \theta_k^{(j)} \right)^2}_{J(\theta^{(1)},\dots,\theta^{(n_u)})}.
+    \end{equation*}
+  \item We can use gradient descent.
+    \begin{align*}
+      \theta_k^{(j)} &:= \theta_k^{(j)} - \alpha \sum_{i:r(i,j)=1} \left( \left( \theta^{(j)} \right)^T x^{(i)} - y^{(i,j)}\right)x_k^{(i)} \quad \text{for $k=0$} \\
+      \theta_k^{(j)} &:= \theta_k^{(j)} - \underbrace{\alpha \left[ \sum_{i:r(i,j)=1} \left( \left( \theta^{(j)} \right)^T x^{(i)} - y^{(i,j)}\right)x_k^{(i)} + \lambda \theta_k^{(j)} \right]}_{\frac{\partial}{\partial \theta_k^{(j)}} J(\theta^{(1)}, \dots, \theta^{(n_u)})} \quad \text{for $k \neq 0$}
+    \end{align*}
+  \item But often, we don't even have features $x_1$ and $x_2$!
+  \item Collaborative Filtering; Feature Learning - we don't always have $x_1$ and $x_2$. Can we learn these features?
+  \item Suppose we don't know $x_1$ and $x_2$. Suppose our useres tell
+    us the kind of movies they like, e.g. \\ $\theta^{(j)}
+    = \begin{bmatrix} 0 \\ 5 \, \, \text{(likes romantic)} \\ 0 \, \,
+      \text{(doesn't like action)}\end{bmatrix}$. (Question: is
+    $\theta^{(j)}_0$ always 0?)
+  \item Cf. lec 16, p. 10. Since Alice and Bob love $x^{(1)}$ (Love at Last, but its title doesn't matter), we can infer that it's probably romantic, since Alice's and Bob's $\theta^{(j)}$ has high values for romantic movies.
+  \item Another way of phrasing the question is what should $x^{(1)}$ be such that $(\theta^{(1)})^Tx^{(1)} \approx 5$ (Alice's rating) and $(\theta^{(2)})^Tx^{(1)} \approx 5$ (Bob's rating).
+  \item Feature learning algorithm:
+    \begin{enumerate}
+      \item Given $\theta^{(1)}, \dots, \theta^{(n_u)}$, to learn $x^{(i)}$:
+        \begin{equation*}
+          \min_{x^{(i)}} \frac{1}{2} \sum_{j:r(i,j)=1} \left( (\theta^{(j)})^T x^{(i)} - y^{(i,j)} \right)^2 + \frac{\lambda}{2} \sum_{k=1}^n \left( x_k^{(i)}\right)^2.
+        \end{equation*}
+        To learn $x^{(1)}, \dots, x^{(n_m)}$, 
+        \begin{equation*}
+          \min_{x^{(1)}, \dots, x^{(n_m)}} \sum_{i=1}^{n_m}\sum_{j:r(i,j)=1} \left( (\theta^{(j)})^T x^{(i)} - y^{(i,j)} \right)^2 + \frac{\lambda}{2} \sum_{i=1}^{n_m} \sum_{k-=1}^n \left( x_k^{(i)} \right)^2
+        \end{equation*}
+    \end{enumerate}
+  \item We saw that given $x^{(1)}, \dots, x^{(n_m)}$ and movie ratings, we can estimate $\theta^{(1)}, \dots, \theta^{(n_u)}$. \\ Here, given $\theta^{(1)}, \dots, \theta^{(n_u)}$, we can estimate $x^{(1)}, \dots, x^{(n_m)}$.
+  \item Somewhat of a chicken and an egg situation. Randomly
+    initialize $\theta$. Get $x$. Then get $\theta$ again, etc. The
+    algorithm will converge to features for movies and $\theta$.
+  \item Collaborative Filtering Algorithm; Could go back and forth and solve for $\theta$, and then $x$, etc. But we can do this all in one step.
+    \begin{align*}
+      J(x^{(1)},\dots,x^{(n_m)},\theta^{(1)},\dots,\theta^{(n_u)}) &= \frac{1}{2} \sum_{(i,j):r(i,j)=1} \left( (\theta^{(j)})^T x^{(i)} - y^{(i,j)} \right)^2 \\
+      &+ \frac{\lambda}{2} \sum_{i=1}^{n_m} \sum_{k=1}^n \left( x_k^{(i)} \right)^2 \\
+      &+ \frac{\lambda}{2} \sum_{j=1}^{n_u} \sum_{k=1}^n \left( \theta_k^{(j)} \right)^2,
+    \end{align*}
+    where $(i,j):r(i,j)=1$ means ``all pairs $(i,j)$ such that $r(i,j)=1$, i.e. where we have movie ratings.'' Then, do
+    \begin{equation*}
+      \min_{\substack{x^{(1)},\dots,x^{(n_m)} \\ \theta^{(1)}, \dots, \theta^{(n_u)}}}  J(x^{(1)},\dots,x^{(n_m)},\theta^{(1)},\dots,\theta^{(n_u)})
+    \end{equation*}
+  \item One note: scrap $x_0$. So $x^{(1)} \in \mathcal{R}^n$ (and not $\mathcal{R}^{n+1}$). $\theta^{(j)} \in \mathcal{R}^n$ too.
+  \item Algo:
+    \begin{enumerate}
+      \item Initialize $x^{(1)},\dots,x^{(n_m)},\theta^{(1)},\dots,\theta^{(n_u)}$ to small random values.
+      \item Minimize $J(x^{(1)},\dots,x^{(n_m)},\theta^{(1)},\dots,\theta^{(n_u)})$.
+        \begin{align*}
+          x_k^{(i)} &:= x_k^{(i)} - \alpha \underbrace{\left[ \sum_{j:r(i,j)=1} \left( (\theta^{(j)})^T x^{(i)} - y^{(i,j)}\right)\theta_k^{(j)} + \lambda x_k^{(i)} \right]}_{\frac{\partial}{\partial x_k^{(i)}} J}\\
+          \theta_k^{(j)} &:= \theta_k^{(j)} - \alpha \underbrace{\left[ \sum_{i:r(i,j)=1} \left( (\theta^{(j)})^T x^{(i)} - y^{(i,j)}\right)x_k^{(j)} + \lambda \theta_k^{(j)} \right]}_{\frac{\partial}{\partial \theta_k^{(j)}} J}
+        \end{align*}
+      \item For a user with parameters $\theta$ and a movie with learned features $x$, the predicted rating is $\theta^T x$.
+    \end{enumerate}
+  \item Vectorization: Low Rank Matrix Factorization. Group ratings into an $n_m \times n_u$ matrix $Y$ (cf. lecture 16, p. 18). (If a rating doesn't exist, put it in as a NaN or a ?). The correspondence is simple: $Y_{i,j} = y^{(i,j)}$.
+  \item Make a matrix of the predicted ratings. Let this matrix be $Z$ s.t. $Z_{i,j} = (\theta^{(j)})^T x^{(i)}$ i.e. the predicted rating for movie $i$ by user $j$.
+    \newcommand*{\horzbar}{\rule[.5ex]{2.5ex}{0.5pt}}
+    \begin{equation*}
+      X=\begin{bmatrix} \horzbar & (x^{(1)})^T & \horzbar \\ & \vdots & \\ \horzbar & (x^{(n_m)})^T & \horzbar \end{bmatrix}, \quad \Theta =\begin{bmatrix} \horzbar & (\theta^{(1)})^T & \horzbar \\ & \vdots & \\ \horzbar & (\theta^{(n_u)})^T & \horzbar \end{bmatrix},
+    \end{equation*}
+    then $Z = X \Theta^T$.
+  \item Find related movies; For each product $i$, learn $x^{(i)} \in \mathcal{R}^n$. How can we find a movie $j$ related to movie $i$? Find one s.t. $\left| x^{(j)} - x^{(i)} \right|$ is small.
+  \item Mean Normalization; Consider a user who hasn't rated any movies. We'll just have a regularization term in the cost function for this user, which will set $\theta = 0$ and thus $\theta^T x=0$. So our algorithm will say this user will give every movie 0 stars.
+  \item Compute the mean rating for all movies $\mu = \begin{bmatrix} \mu_1 \\ \vdots \\ \mu_{n_m} \end{bmatrix}$. Subtract off the mean rating from all ratings $Y$. Not, use this shifted $Y$ to learn $\theta^{(j)}$ and $x^{(i)}$.
+  \item For a user $j$ on movie $i$,
+    \begin{equation*}
+      \text{predicted rating} = (\theta^{(j)})^T x^{(i)} + \mu_i
+    \end{equation*}
+    For a user who hasn't rated anything, their rating will be the average rating.
+\end{itemize}
 \end{document}
